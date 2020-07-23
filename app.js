@@ -128,6 +128,7 @@ app.route("/api/idol")
 //modify charts by transactions
 //total votes
 });
+
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
