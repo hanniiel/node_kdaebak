@@ -2,10 +2,32 @@
     <body>
         <%- include("header") -%>
         <form action="/" method="post">
-            <img src="images/suzy.png" />
+            <!--<img src="/images/suzy.png" />-->
             <input name="n1" placeholder="numero1">
             <input name="n2" placeholder="numero1">
             <button type="submit"><%= cadena %></button>
         </form>
+
+
+        <form action="/api/idol" method="post" enctype="multipart/form-data">
+            <input name="name" placeholder="name">
+            <input name="hangul" placeholder="kr name">
+            <input  name="genre" placeholder="F/M">
+            <input type="date" name="birthday" placeholder="bd">
+            <input type="date" name="debut" placeholder="debut">
+            <input type="checkbox" value="false" name="active" onclick="this.value = this.checked">
+            <input required type="file" name="avatar">
+            <button type="submit">crear idol</button>
+        </form>
+        <!--
+            name:String,
+    avatar:String,
+    hangul:String,
+    type:String,
+    birthday:Date,
+    debut:Date,
+    active:Boolean,
+    genre:String
+        -->
     </body>
 </html>
