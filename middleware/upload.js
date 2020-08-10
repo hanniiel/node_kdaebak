@@ -8,6 +8,11 @@ const upload = multer({
     })
   });
 
+/*const upmulter = multer({
+  dest: 'public/images/'
+});
+*/
+
 const imgur = upload.single("avatar");
 //const imgur = upload.fields([{name:"cover",maxCount:1},{name:"full",maxCount:1}]);
 

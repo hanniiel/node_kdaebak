@@ -1,4 +1,11 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" >
+        <script type="text/javascript" src="jquery/jquery.js"></script>
+        <script type="text/javascript" src="popper/umd/popper.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
     <body>
         <%- include("header") -%>
         <form action="/" method="post">
@@ -8,9 +15,8 @@
             <button type="submit"><%= cadena %></button>
         </form>
 
-
-        <form action="/api/idol" method="post" enctype="multipart/form-data">
-            <input name="name" placeholder="name">
+        <form class="form-group" action="/api/idol" method="post" enctype="multipart/form-data">
+            <input class="form-control" name="name" placeholder="name">
             <input name="hangul" placeholder="kr name">
             <input  name="genre" placeholder="F/M">
             <input type="date" name="birthday" placeholder="bd">
@@ -19,6 +25,8 @@
             <input required type="file" name="avatar">
             <button type="submit">crear idol</button>
         </form>
+
+        
         <!--
             name:String,
     avatar:String,
@@ -29,5 +37,10 @@
     active:Boolean,
     genre:String
         -->
+       
+        <script>
+           
+        </script>
+        
     </body>
 </html>

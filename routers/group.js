@@ -5,12 +5,22 @@ const upload = require("../middleware/upload");
 
 router.route("/api/group")
 .get(async (req,res)=>{
-    //res.render("form",{cadena:"myJs.getString()"});
+    let id= req.query.id;
+    //pagination
+    let page = parseInt(req.query.page ? req.query.page : 0);
+    let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
     try{
-        let groups = await Group.find();
-        res.send(groups);
+        if(id){
+            let group = await Group.findById(id).populate("members").exec();
+            res.send(group);
+
+        }else{
+            var groups = await Group.find({},{},{skip:page*per_page,limit:per_page}).populate("members").exec();
+            res.send(groups);
+        }
+        
     }catch(e){
-        res.status(401).send({error:"not found"});
+        res.status(400).send({error:e});
     }
 })
 .post(upload,async(req,res)=>{
@@ -18,15 +28,16 @@ router.route("/api/group")
         if(!req.file){
             res.status(400).send({error:"file not provided"});
         }
-
         let group = new Group({
-            ...req.body
+            ...req.body,
+            avatar:req.file.data.link,
         });
         let saved = await group.save();
+        saved.populate()
         res.send(saved);
 
     }catch(e){
-        res.status(401).send({error:e});
+        res.status(400).send({error:e});
     }
 },(error,req,res,nexr)=>{
     res.status(400).send({error:error.message});

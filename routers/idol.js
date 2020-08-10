@@ -12,14 +12,14 @@ router.route("/api/idol")
     //
     if(id){
         try{
-            let idol = await Idol.findById(id);
+            let idol = await Idol.findById(id).populate("group").exec();
             res.status(200).send(idol);
         }catch(e){
             res.status(401).send({error:'Not found'});
         }
     }else{
         try{
-            let idols = await Idol.find({},{},{skip:page*per_page,limit:per_page});
+            let idols = await Idol.find({},{},{skip:page*per_page,limit:per_page}).populate("group").exec();
             res.status(200).send(idols);
         }catch(e){
             res.status(400).send(e);

@@ -7,13 +7,11 @@ const schema = new mongoose.Schema({
     active:Boolean,
     genre:String,
     members:[{
-        member:{
             type:mongoose.Schema.Types.ObjectId,
             required:true,
             unique:true,
             ref:"Idol"
-        }
-    }]
+        }]
 });
 var model = new mongoose.model("Group",schema);
 

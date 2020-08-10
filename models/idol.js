@@ -8,8 +8,20 @@ const schema = new mongoose.Schema({
     debut:Date,
     active:Boolean,
     genre:String
+},{ id:false, toJSON: { virtuals: true }, toObject: { virtuals: true }});
+
+schema.virtual("group",{
+    ref:"Group",
+    localField:"_id",
+    foreignField:"members",
+    justOne: true,
 });
+
+
+
+
 var model = new mongoose.model("Idol",schema);
+
 
 
 exports.Model = model;
