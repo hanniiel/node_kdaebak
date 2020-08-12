@@ -20,8 +20,11 @@ app.use("/bootstrap",express.static(__dirname +"/node_modules/bootstrap/dist"));
 app.use("/jquery",express.static(__dirname +"/node_modules/jquery/dist"));
 app.use("/popper",express.static(__dirname +"/node_modules/popper.js/dist"));
 
-app.get("/",function(req,res){
+app.get("/group",function(req,res){
     res.render("group");
+});
+app.get("/idol",function(req,res){
+  res.render("form");
 });
 
 let port = process.env.PORT;

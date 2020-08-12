@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
     name:String,
-    avatar:String,
     hangul:String,
-    type:String,
+    avatar:String,
+    type:String,//Idol actor or array
     birthday:Date,
     debut:Date,
     active:Boolean,
-    genre:String
+    gender:String
 },{ id:false, toJSON: { virtuals: true }, toObject: { virtuals: true }});
 
 schema.virtual("group",{

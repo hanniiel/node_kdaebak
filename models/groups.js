@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
     avatar:String,
     debut:Date,
     active:Boolean,
-    genre:String,
+    gender:String,
     members:[{
             type:mongoose.Schema.Types.ObjectId,
             required:true,

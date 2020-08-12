@@ -1,46 +1,52 @@
 <html>
     <head>
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" >
-        <script type="text/javascript" src="jquery/jquery.js"></script>
-        <script type="text/javascript" src="popper/umd/popper.js"></script>
-        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <%- include("header") -%>
     </head>
     <body>
-        <%- include("header") -%>
-        <form action="/" method="post">
-            <!--<img src="/images/suzy.png" />-->
-            <input name="n1" placeholder="numero1">
-            <input name="n2" placeholder="numero1">
-            <button type="submit"><%= cadena %></button>
-        </form>
+       <div class="container">
+           <div>
+               <H1>Crear idol</H1>
+           </div>
+           <div class="row">
+            <form class="form-group" action="/api/idol" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input class="form-control" name="name" placeholder="name" required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" name="hangul" placeholder="kr name" required>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="gender" required>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
 
-        <form class="form-group" action="/api/idol" method="post" enctype="multipart/form-data">
-            <input class="form-control" name="name" placeholder="name">
-            <input name="hangul" placeholder="kr name">
-            <input  name="genre" placeholder="F/M">
-            <input type="date" name="birthday" placeholder="bd">
-            <input type="date" name="debut" placeholder="debut">
-            <input type="checkbox" value="false" name="active" onclick="this.value = this.checked">
-            <input required type="file" name="avatar">
-            <button type="submit">crear idol</button>
-        </form>
+                </div>
+                <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input class="form-control" type="date" name="birthday" placeholder="bd" required>
 
-        
-        <!--
-            name:String,
-    avatar:String,
-    hangul:String,
-    type:String,
-    birthday:Date,
-    debut:Date,
-    active:Boolean,
-    genre:String
-        -->
-       
-        <script>
-           
-        </script>
-        
+                </div>
+                <div class="form-group">
+                    <label for="debut">Debut</label>
+                    <input class="form-control" type="date" name="debut" placeholder="debut">
+
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="false" name="active" onclick="this.value = this.checked">
+                    <label class="form-check-label" for="exampleCheck1">Active</label>
+                </div>
+                <div class="custom-file">
+                    <input class="custom-file-input" required type="file" name="avatar">
+                    <label class="custom-file-label" for="validatedCustomFile">Choose avatar...</label>
+                    <div class="invalid-feedback">Example invalid custom file feedback</div>
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">crear idol</button>
+                </div>
+            </form>
+           </div>
+        </div>
     </body>
 </html>
