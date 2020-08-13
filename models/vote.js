@@ -5,7 +5,7 @@ const schema = mongoose.Schema({
         required:true,
         ref:"User"
     },
-    genre:{
+    gender:{
         type:String,
         required:true,
         enum:['M','F','O']

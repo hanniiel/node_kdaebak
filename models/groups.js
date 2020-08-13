@@ -11,7 +11,17 @@ const schema = new mongoose.Schema({
             required:true,
             unique:true,
             ref:"Idol"
+        }],
+   /* exmembers:[{
+        member:[{
+            type:mongoose.Schema.Types.ObjectId,
+            required:true,
+            unique:true,
+            ref:"Idol",
+            leftAt:Date,
+            reason:String,
         }]
+    }]*/
 });
 var model = new mongoose.model("Group",schema);
 
