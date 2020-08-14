@@ -1,3 +1,4 @@
+const moment = require("moment");
 const express = require("express");
 const router = express.Router();
 const Group = require("../models/groups").Model;
@@ -54,6 +55,55 @@ router.route("/api/group")
 
     }catch(e){
         res.status(401).send({error:e});
+    }
+});
+
+router.get("/api/group/ranking",async(req,res)=>{
+    try{
+        let start = moment().utc(false).startOf("isoWeek").toDate();
+        let end = moment().utc(false).endOf("isoWeek").toDate();
+        //
+        let groups = await Group.aggregate([
+           
+            {
+                $lookup:{
+                    from:"votes",
+                    let:{"id":"$_id"},
+                    pipeline:[{ 
+                        $match:{
+                            createdAt:{$gte:start,$lte:end},
+                            $expr:{
+                                $eq:["$group","$$id"]
+                            }
+                        }
+                    }],
+                    as: "idol_docs"
+                },
+            },
+            {
+                $unwind:{
+                    path: "$idol_docs",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $group:{
+                    _id:"$_id",
+                    members:{$first:"$members"},
+                    name:{$first:"$name"},
+                    hangul:{$first:"$hangul"},
+                    gender:{$first:"$gender"},
+                    debut:{$first:"$debut"},
+                    active:{$first:"$active"},
+                    avatar:{$first:"$avatar"},
+                    votes:{$sum:"$idol_docs.votes"}
+                    
+                }
+            }
+        ]).exec();
+        res.send(groups);
+    }catch(error){
+        res.status(400).send({error});
     }
 });
 

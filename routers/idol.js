@@ -51,10 +51,10 @@ router.route("/api/idol")
 
 router.get("/api/idol/ranking",async(req,res)=>{
     try{
+        let start = moment().utc(false).startOf("isoWeek").toDate();
+        let end = moment().utc(false).endOf("isoWeek").toDate();
+        //
         let idols = await Idol.aggregate([
-            {
-                $match:{active:true}
-            },
             {
                 $lookup:{
                     from: "votes",
@@ -62,6 +62,7 @@ router.get("/api/idol/ranking",async(req,res)=>{
                     pipeline:[
                         {
                             $match:{
+                                createdAt:{$gte:start,$lte:end},
                                 $expr:{
                                     $eq:["$idol","$$idol"]
                                 }
@@ -81,30 +82,14 @@ router.get("/api/idol/ranking",async(req,res)=>{
             {
                 $group:{
                     _id:"$_id",
-                    name:{
-                        $first:"$name"
-                    },
-                    hangul:{
-                        $first:"$hangul"
-                    },
-                    gender:{
-                        $first:"$gender"
-                    },
-                    birthday:{
-                        $first:"$birthday"
-                    },
-                    debut:{
-                        $first:"$debut"
-                    },
-                    active:{
-                        $first:"$active"
-                    },
-                    avatar:{
-                        $first:"$avatar"
-                    },
-                   votes:{
-                       $sum:"$idol_docs.votes"
-                   }
+                    name:{$first:"$name"},
+                    hangul:{$first:"$hangul"},
+                    gender:{$first:"$gender"},
+                    birthday:{$first:"$birthday"},
+                    debut:{$first:"$debut"},
+                    active:{$first:"$active"},
+                    avatar:{$first:"$avatar"},
+                    votes:{$sum:"$idol_docs.votes"}
                 }
             },
             { $sort:{votes:-1}}
