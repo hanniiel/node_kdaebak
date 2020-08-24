@@ -12,18 +12,33 @@ router.route("/api/idol")
     let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
     //
     try{
+
         if(id){
             let idol = await Idol.findById(id).populate("group").exec();
             res.status(200).send(idol);
 
-        }else{
-            let start = moment().utc(false).startOf("isoWeek").toDate();
-            let end = moment().utc(false).endOf("isoWeek").toDate();
+        }
+        else if(Object.keys(req.query).includes("name")){
+            let name = req.query.name;
+
+            let idols = await Idol.find({ 
+                $or:[
+                    {name:{ $regex: name,$options:'i' }},
+                    {hangul:{ $regex: name,$options:'i' }}
+                ] 
+            });
+            if(idols.length===0){
+                return res.status(400).send("coincidence not found");
+            }
+            res.send(idols);
+        }
+        else{
             let idols = await Idol.find({},{},{skip:page*per_page,limit:per_page}).populate("group").exec();
             res.status(200).send(idols);
         }
+
     }catch(e){
-        res.status(400).send(e);
+        res.status(400).send("errro"+e);
     }
 }).post(upload, async function(req,res){
 
@@ -44,9 +59,26 @@ router.route("/api/idol")
         res.status(400).send({error});
     }
     
-}).patch(function(req,res){
-//modify charts by transactions
-//total votes
+}).patch(async(req,res)=>{
+    try{
+        let updates = Object.keys(req.body);
+        let allowed = ['profession','_id','name','hangul','avatar','birthday','debut'];
+        let isValid = updates.every((key)=>allowed.includes(key));
+        if(!isValid){
+             return res.status(400).send("update operation not allowed");
+        }
+        let id = req.body._id;
+        delete req.body._id;
+
+        let idol = await Idol.findByIdAndUpdate(id,req.body,{new:true,runValidators:true});
+        if(!idol){
+             return res.send(404).send("not idol found");
+        }
+        res.send(idol);
+    }catch(error){
+        res.status(400).send({error});
+    }
+
 });
 
 router.get("/api/idol/ranking",async(req,res)=>{

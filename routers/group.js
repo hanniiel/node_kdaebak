@@ -7,16 +7,28 @@ const upload = require("../middleware/upload");
 router.route("/api/group")
 .get(async (req,res)=>{
     let id= req.query.id;
+    let name= req.query.name;
     //pagination
     let page = parseInt(req.query.page ? req.query.page : 0);
     let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
     try{
         if(id){
-            let group = await Group.findById(id).populate("members").exec();
+            let group = await Group.findById(id).populate("members.member").exec();
             res.send(group);
 
+        }else if(name){
+            let groups = await Group.find({ 
+                $or:[
+                    {name:{ $regex: name,$options:'i' }},
+                    {hangul:{ $regex: name,$options:'i' }}
+                ] 
+            });
+            if(groups.length===0){
+                return res.status(400).send("coincidence not found");
+            }
+            res.send(groups);
         }else{
-            var groups = await Group.find({},{},{skip:page*per_page,limit:per_page}).populate("members").exec();
+            var groups = await Group.find({},{},{skip:page*per_page,limit:per_page}).populate("members.member").exec();
             res.send(groups);
         }
         
@@ -29,6 +41,7 @@ router.route("/api/group")
         if(!req.file){
             res.status(400).send({error:"file not provided"});
         }
+        console.log(req.body)
         let group = new Group({
             ...req.body,
             avatar:req.file.data.link,
@@ -40,21 +53,24 @@ router.route("/api/group")
     }catch(e){
         res.status(400).send({error:e});
     }
-},(error,req,res,nexr)=>{
+},(error,req,res,next)=>{
     res.status(400).send({error:error.message});
 }).patch(upload,async(req,res)=>{
     try{
-        const group = await Group.findById(req.body.id);
+        console.log(req.body)
+
+        let id = req.body._id;
+        delete req.body._id;
+        let group = await Group.findByIdAndUpdate(id,req.body,{new:true,runValidators:true});
+        console.log("fff")
         //update data
         if(!group){
-            res.status(400).send({error:"not found"});
+            return res.status(400).send({error:"group not found"});
         }
-        //update data
-        let updated =await group.save();
-        res.send(updated);
+        res.send(group);
 
     }catch(e){
-        res.status(401).send({error:e});
+        res.status(400).send({error:e});
     }
 });
 

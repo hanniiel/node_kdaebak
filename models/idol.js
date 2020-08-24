@@ -1,13 +1,36 @@
 const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
-    name:String,
-    hangul:String,
-    avatar:String,
-    type:String,//Idol actor or array
-    birthday:Date,
+    name:{
+        type:String,
+        required:true
+    },
+    hangul:{
+        type:String,
+        required:true
+    },
+    avatar:{
+        type:String,
+        required:true
+    },
+    profession:{
+        type:[String],
+        enum: ['I','A','S'], //Idol, Actor,Singer
+        required:true,
+        //validate repeated value
+    },//Idol actor or array
+    birthday:{
+        type:Date,
+        required:true
+    },
     debut:Date,
-    active:Boolean,
-    gender:String
+    active:{
+        type:Boolean,
+        required:true
+    },
+    gender:{
+        type:String,
+        required:true
+    }
 },{ id:false, toJSON: { virtuals: true }, toObject: { virtuals: true }});
 
 schema.virtual("group",{
@@ -16,6 +39,9 @@ schema.virtual("group",{
     foreignField:"members",
     justOne: true,
 });
+
+//discography
+//fandom
 
 
 

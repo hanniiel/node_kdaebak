@@ -5,16 +5,6 @@ const schema = mongoose.Schema({
         required:true,
         ref:"User"
     },
-    gender:{
-        type:String,
-        required:true,
-        enum:['M','F','O']
-    },
-    type:{
-        type:String,
-        required:true,
-        enum:['I','G','A'] //Idol,Group,Acting,Model,etc...
-    },
     idol:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Idol"

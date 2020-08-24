@@ -7,21 +7,24 @@ const schema = new mongoose.Schema({
     active:Boolean,
     gender:String,
     members:[{
+        member:{
             type:mongoose.Schema.Types.ObjectId,
-            required:true,
-            unique:true,
+            required:false,
+            unique:false,
             ref:"Idol"
+        },
+        joined:Date
         }],
-   /* exmembers:[{
-        member:[{
+   exmembers:[{
+        member:{
             type:mongoose.Schema.Types.ObjectId,
-            required:true,
-            unique:true,
+            required:false,
+            unique:false,
             ref:"Idol",
-            leftAt:Date,
-            reason:String,
-        }]
-    }]*/
+        },
+        left:Date,
+        reason:String,
+    }]
 });
 var model = new mongoose.model("Group",schema);
 

@@ -2,11 +2,67 @@
     <head>
         <%- include("header") -%>
     </head>
+    <style>
+        img {
+  height: 100px;
+  margin-right: 1rem;
+}
+
+.d-center {
+  display: flex;
+  align-items: center;
+}
+
+.selected img {
+  width: auto;
+  max-height: 23px;
+  margin-right: 0.5rem;
+}
+
+.v-select .dropdown li {
+  border-bottom: 1px solid rgba(112, 128, 144, 0.1);
+}
+
+.v-select .dropdown li:last-child {
+  border-bottom: none;
+}
+
+.v-select .dropdown li a {
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 1.25em;
+  color: #43c632;
+}
+
+.v-select .dropdown-menu .active > a {
+  color: #fff;
+}
+    </style>
     <body>
         
         <div class="container" id="app">
             <h1>Hello group</h1>
             <todo-item></todo-item>
+            <v-select multiple label="name" 
+            :filterable="false" 
+            :options="options"
+            @search="onSearch">
+                <template slot="no-options">
+                  type to search GitHub repositories..
+                </template>
+                <template slot="option" slot-scope="option">
+                  <div class="d-center">
+                    <img :src='option.avatar'/> 
+                    {{ option.name +" - "+ new Date(option.birthday).toISOString().slice(0,10)}}
+                    </div>
+                </template>
+                <template slot="selected-option" slot-scope="option">
+                  <div class="selected d-center">
+                    <img :src='option.avatar'/> 
+                    {{ option.name }}
+                  </div>
+                </template>
+            </v-select>
             <div class="row">
                 <form action="/api/group" method="post" enctype="multipart/form-data">
                     <div class="form-group">
@@ -25,8 +81,8 @@
                         <input class="form-control" type="date" name="debut" placeholder="debut">
                     </div>
                     <div class="form-group">
-                        <select name="members" id="members" multiple class="form-control">
-                            <option v-bind:value="idol._id" v-for="idol in info">{{idol.name}}</option>
+                        <select name="members" id="members" multiple class="selectpicker" data-live-search="true" >
+                            <option @:value="idol._id" v-for="idol in info">{{idol.name}}</option>
                         </select>
                     </div>
                     <div class="form-check">
@@ -49,23 +105,41 @@
             Vue.component('todo-item', {
             template: '<li>This is a todo</li>'
             })
+            Vue.component("v-select", VueSelect.VueSelect);
             var app = new Vue({
             el: '#app',
             data() {
                 return {
-                    info : null
+                    info : null,
+                    options: []
+                    
                 }
             },
             mounted () {
                 axios
-                .get('http://localhost:3000/api/idol')
+                .get('http://localhost:3000/api/idol/')
                 .then(response => (this.info = response.data))
+            },
+            methods:{
+                addIdol:function(){
+                    //this
+                },
+                onSearch(search, loading) {
+                    loading(true);
+                    this.search(loading, search, this);
+                },
+                search: (loading, search, vm) => {
+                    axios
+                    .get(`http://localhost:3000/api/idol/?name=${escape(search)}`
+                    ).then(response => {
+                        vm.options = response.data;
+                        loading(false);
+                    });
+                }
             }
             });
-            
-            $(document).ready(function(){
-
-            });
+         
         </script>
+
     </body>
 </html>
