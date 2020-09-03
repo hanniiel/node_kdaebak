@@ -36,7 +36,7 @@ const schema = new mongoose.Schema({
 schema.virtual("group",{
     ref:"Group",
     localField:"_id",
-    foreignField:"members",
+    foreignField:"members.member",
     justOne: true,
 });
 

@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express= require("express");
+const cors = require('cors');
 
 require(__dirname+"/models/connection");
 const idolRouter = require(__dirname+ "/routers/idol");
@@ -8,7 +9,10 @@ const userRouter = require(__dirname+"/routers/user");
 const voteRouter = require(__dirname+"/routers/vote");
 
 const app = express();
+//middleware
+app.use(cors());
 app.use(express.json());
+
 app.use(idolRouter);
 app.use(groupRouter);
 app.use(userRouter);
@@ -20,11 +24,15 @@ app.use("/bootstrap",express.static(__dirname +"/node_modules/bootstrap/dist"));
 app.use("/jquery",express.static(__dirname +"/node_modules/jquery/dist"));
 app.use("/popper",express.static(__dirname +"/node_modules/popper.js/dist"));
 
+app.get("/",function(req,res){
+  res.render("index")
+});
+
 app.get("/group",function(req,res){
     res.render("group");
 });
 app.get("/idol",function(req,res){
-  res.render("form");
+  res.render("idol");
 });
 
 let port = process.env.PORT;

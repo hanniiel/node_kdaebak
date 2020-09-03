@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "webpack": "webpack --mode development --watch",
+    "build": "webpack --mode production"
   },
   "author": "haniel",
   "license": "ISC",
@@ -15,6 +17,7 @@
   "dependencies": {
     "bcrypt": "^3.0.6",
     "bootstrap": "^4.5.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.3",
     "express": "^4.17.1",
@@ -28,5 +31,15 @@
     "popper.js": "^1.16.1",
     "rijndael-js": "^2.0.0",
     "validator": "^13.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0",
+    "vue": "^2.6.12",
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   }
 }
