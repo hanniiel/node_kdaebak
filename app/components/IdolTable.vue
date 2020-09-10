@@ -1,5 +1,5 @@
 <template>
-        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+        <div class="table-wrapper-scroll-y my-custom-scrollbar" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
             <table class="table table-bordered table-striped mb-0">
                 <thead>
                 <tr>
