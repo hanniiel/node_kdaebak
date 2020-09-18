@@ -82,9 +82,14 @@ router.route("/api/idol")
 });
 
 router.get("/api/idol/ranking",async(req,res)=>{
+
+    let page = parseInt(req.query.page ? req.query.page : 0);
+    let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
+
     try{
         let start = moment().utc(false).startOf("isoWeek").toDate();
         let end = moment().utc(false).endOf("isoWeek").toDate();
+
         //
         let idols = await Idol.aggregate([
             {
@@ -124,8 +129,10 @@ router.get("/api/idol/ranking",async(req,res)=>{
                     votes:{$sum:"$idol_docs.votes"}
                 }
             },
-            { $sort:{votes:-1}}
-        ]);
+            { $sort:{votes:-1}},
+            { $skip:  page*per_page},
+            { $limit: per_page}
+        ]).exec();
         res.send(idols);
     }catch(e){
         res.status(400).send({error:e});
