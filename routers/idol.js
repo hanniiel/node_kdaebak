@@ -85,13 +85,42 @@ router.get("/api/idol/ranking",async(req,res)=>{
 
     let page = parseInt(req.query.page ? req.query.page : 0);
     let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
+    let range = req.query.range ? req.query.range : 'weekly'
+    let gender = req.query.gender ?  req.query.gender : 'F';
 
     try{
-        let start = moment().utc(false).startOf("isoWeek").toDate();
-        let end = moment().utc(false).endOf("isoWeek").toDate();
+
+        let start,end;
+        
+        switch(range){
+            case 'daily':
+                start = moment().utc(false).startOf('day').toDate();
+                end = moment().utc(false).endOf('day').toDate();
+                break;
+            case 'weekly':
+                start = moment().utc(false).startOf("isoWeek").toDate();
+                end = moment().utc(false).endOf("isoWeek").toDate();
+                break;
+            case 'monthly':
+                start = moment().utc(false).startOf('month').toDate();
+                end = moment().utc(false).endOf('month').toDate();
+                break;
+            default :
+                start = moment().utc(false).startOf("isoWeek").toDate();
+                end = moment().utc(false).endOf("isoWeek").toDate();
+                break;
+        }
+        
+
+       
 
         //
         let idols = await Idol.aggregate([
+            {
+                $match:{
+                    gender:{$regex: gender,$options:'i'}
+                }
+            },
             {
                 $lookup:{
                     from: "votes",
@@ -129,7 +158,7 @@ router.get("/api/idol/ranking",async(req,res)=>{
                     votes:{$sum:"$idol_docs.votes"}
                 }
             },
-            { $sort:{votes:-1}},
+            { $sort:{votes:-1,name:1}},
             { $skip:  page*per_page},
             { $limit: per_page}
         ]).exec();
