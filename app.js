@@ -20,12 +20,9 @@ app.use(voteRouter);
 app.use(express.static("public"));
 
 app.set("view engine","ejs");
-app.use("/bootstrap",express.static(__dirname +"/node_modules/bootstrap/dist"));
-app.use("/jquery",express.static(__dirname +"/node_modules/jquery/dist"));
-app.use("/popper",express.static(__dirname +"/node_modules/popper.js/dist"));
 
 app.get("/",function(req,res){
-  res.render("index")
+  res.sendFile('public/index.html');
 });
 
 app.get("/group",function(req,res){

@@ -1,28 +1,5 @@
-<html>
-    <head>
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" >
-
-        <script src="https://kit.fontawesome.com/7410f4f649.js" crossorigin="anonymous"></script>
-        
-        <script type="text/javascript" src="jquery/jquery.js"></script>
-        <script type="text/javascript" src="popper/umd/popper.js"></script>
-        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-
-
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        
-    </head>
-    <body>
-        <section>
-            <div id="app2">
-
-            </div>
-        </section>
-       <div class="container">
-           
-           <div class="row">
-            
-            <form class="col-md-6 form-group" action="/api/idol" method="post" enctype="multipart/form-data">
+<template>
+    <form class="col-lg-6 form-group" action="/api/idol" method="post" enctype="multipart/form-data">
                 <div>
                     <H1>Crear idol</H1>
                 </div>
@@ -82,12 +59,4 @@
                     <button class="btn btn-primary btn-lg" style="margin: 1%;" type="submit">crear idol</button>
                 </div>
             </form>
-            <div class="col-md-6">
-                <div id="idols"></div>
-            </div>
-
-           </div>
-        </div>
-        <script src="/bundle.js" ></script>
-    </body>
-</html>
+</template>
