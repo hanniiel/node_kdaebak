@@ -1,62 +1,194 @@
 <template>
-    <form class="col-lg-6 form-group" action="/api/idol" method="post" enctype="multipart/form-data">
-                <div>
-                    <H1>Crear idol</H1>
-                </div>
-                <div class="form-group">
-                    <label for="name">(Artistic)Romanized Name</label>
-                    <input class="form-control" name="name" placeholder="Name" required>
-                </div>
-                <div class="form-group">
-                    <label for="hangul">(Artistic)Hangul Name</label>
-                    <input class="form-control" name="hangul" placeholder="Korean Name" required>
-                </div>
-                <div class="form-group">
-                    <label for="nativeName">(Native language) Name</label>
-                    <input class="form-control" name="nativeName" placeholder="Native Name(hangul,japanese etc)" required>
-                </div>
-                <div class="form-group">
-                    <label for="fullName">Full Name (Romanized)</label>
-                    <input class="form-control" name="fullName" placeholder="Full  Name" required>
-                </div>
-                <div class="form-group">
-                    <label for="profession:">Profession (multiple allowed)</label>
-                    <select multiple class="form-control" name="profession" required>
-                        <option value="I">Idol</option>
-                        <option value="A">Actor</option>
-                        <option value="S">Singer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="gender:">Gender:</label>
-                    <select class="form-control" name="gender" required>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="birthday">Birthday</label>
-                    <input class="form-control" type="date" name="birthday" placeholder="bd" required>
+  <form
+    id="form"
+    class="col-lg-6 form-group"
+    action="/api/idol"
+    method="post"
+    enctype="multipart/form-data"
+    @submit.prevent="$emit('send-data',this.$el)">
+    <div>
+      <h1>Crear idol</h1>
+    </div>
+    <div class="form-group">
+      <input v-if="edit" name="_id" v-model="idol._id" type="hidden" />
+      <label for="name">(Artistic)Romanized Name</label>
+      <input
+        v-model="idol.name"
+        class="form-control"
+        name="name"
+        placeholder="Name"
+        required
+      >
+    </div>
+    <div class="form-group">
+      <label for="hangul">(Artistic)Hangul Name</label>
+      <input
+        v-model="idol.hangul"
+        class="form-control"
+        name="hangul"
+        placeholder="Korean Name"
+        required
+      >
+    </div>
+    <div class="form-group">
+      <label for="nativeName">(Native language) Name</label>
+      <input
+        v-model="idol.nativeName"
+        class="form-control"
+        name="nativeName"
+        placeholder="Native Name(hangul,japanese etc)"
+        required
+      >
+    </div>
+    <div class="form-group">
+      <label for="fullName">Full Name (Romanized)</label>
+      <input
+        v-model="idol.fullName"
+        class="form-control"
+        name="fullName"
+        placeholder="Full  Name"
+        required
+      >
+    </div>
+    <div class="form-group">
+      <label for="profession:">Profession (multiple allowed)</label>
+      <select
+        v-model="idol.profession"
+        multiple
+        class="form-control"
+        name="profession"
+        required
+      >
+        <option value="I">
+          Idol
+        </option>
+        <option value="A">
+          Actor
+        </option>
+        <option value="S">
+          Singer
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="gender:">Gender:</label>
+      <select
+        v-model="idol.gender"
+        class="form-control"
+        name="gender"
+        required
+      >
+        <option value="M">
+          Male
+        </option>
+        <option value="F">
+          Female
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="birthday">Birthday</label>
+      <input
+        v-model="idol.birthday"
+        class="form-control"
+        type="date"
+        name="birthday"
+        placeholder="bd"
+        required
+      >
+    </div>
+    <div class="form-group">
+      <label for="debut">Debut</label>
+      <input
+        v-model="idol.debut"
+        class="form-control"
+        type="date"
+        name="debut"
+        placeholder="debut"
+      >
+    </div>
+    <div class="form-check">
+      <input
+        v-model="idol.active"
+        class="form-check-input"
+        type="checkbox"
+        name="active"
+        
+      >
+      <label
+        class="form-check-label"
+        for="exampleCheck1"
+      > isCurrentlyActive</label>
+    </div>
+    <div class="custom-file">
+      <input
+        class="custom-file-input"
+        :required="!edit"
+        type="file"
+        name="avatar"
+        @change="onChange"
+      >
+      <label
+        class="custom-file-label"
+        for="validatedCustomFile"
+      >Choose avatar...</label>
+      <div class="invalid-feedback">
+        Example invalid custom file feedback
+      </div>
+      <br>
+    </div>
 
-                </div>
-                <div class="form-group">
-                    <label for="debut">Debut</label>
-                    <input class="form-control" type="date" name="debut" placeholder="debut">
-
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="false" name="active" onclick="this.value = this.checked">
-                    <label class="form-check-label" for="exampleCheck1"> isCurrentlyActive</label>
-                </div>
-                <div class="custom-file">
-                    <input class="custom-file-input" required type="file" name="avatar">
-                    <label class="custom-file-label" for="validatedCustomFile">Choose avatar...</label>
-                    <div class="invalid-feedback">Example invalid custom file feedback</div>
-                    <br>
-                </div>
-                
-                <div class="form-group">
-                    <button class="btn btn-primary btn-lg" style="margin: 1%;" type="submit">crear idol</button>
-                </div>
-            </form>
+    <div class="form-group">
+      <button
+        v-if="!isSubmiting"
+        class="btn btn-primary btn-lg"
+        style="margin: 1%;"
+      >
+        {{edit ? 'Editar':'Crear'}}
+      </button>
+      <button
+        @click="$emit('cancel-edit')"
+        v-if="edit"
+        class="btn btn-primary btn-lg"
+        style="margin: 1%;"
+      >
+        cancel edition
+      </button>
+    </div>
+    <div
+      v-if="isSubmiting"
+      class="d-flex justify-content-center"
+    >
+      <div
+        class="spinner-border"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </form>
 </template>
+<script>
+import axios from 'axios'
+
+export default {
+  data () {
+    return {
+     
+      submiting: false
+    }
+  },
+  props:['edit','idol','isSubmiting'],
+  emits:['cancel-edit','send-data'],
+  methods: {
+    
+    onChange (e) {
+      var files = e.target.files || e.dataTransfer.files
+      if (!files.length) { return }
+      console.log('file registered')
+
+      this.idol.avatar = files[0]
+    }
+  }
+}
+</script>

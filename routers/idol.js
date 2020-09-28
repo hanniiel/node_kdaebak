@@ -40,7 +40,8 @@ router.route("/api/idol")
     }catch(e){
         res.status(400).send("errro"+e);
     }
-}).post(upload, async function(req,res){
+})
+.post(upload, async function(req,res){
 
     try{
         if(!req.file){
@@ -59,14 +60,15 @@ router.route("/api/idol")
         res.status(400).send({error});
     }
     
-}).patch(async(req,res)=>{
+})
+.patch(async(req,res)=>{
     try{
-        let updates = Object.keys(req.body);
+        /*let updates = Object.keys(req.body);
         let allowed = ['profession','_id','name','hangul','avatar','birthday','debut'];
         let isValid = updates.every((key)=>allowed.includes(key));
         if(!isValid){
              return res.status(400).send("update operation not allowed");
-        }
+        }*/
         let id = req.body._id;
         delete req.body._id;
 
