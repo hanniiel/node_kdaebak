@@ -24,7 +24,7 @@ class Alert{
  }
 }
 class Idol {
-  constructor (_id,name, hangul, nativeName, fullName, profession = [], gender='F', birthday=null, debut='', active=true,avatar) {
+  constructor (_id,name, hangul, nativeName, fullName, profession = [], gender='F', birthday=null, debut=null, active=true,avatar) {
     this._id =_id
     this.name = name
     this.hangul = hangul
@@ -60,18 +60,37 @@ export default {
   methods:{
     edit(idol){
       this.isEdit = true;
-      
+      console.log(idol.debut)
       idol.birthday= new Date(idol.birthday).toISOString().slice(0,10)
-      idol.debut= idol.debut!=null? new Date(idol.debut).toISOString().slice(0,10):null;
+      idol.debut= idol.debut!=null ? new Date(idol.debut).toISOString().slice(0,10):null;
+      idol.profession = Array.from(idol.profession)
       delete idol.group
       delete idol.__v
+
       this.idol = idol;
     },
     cancelEdit(){
       this.isEdit = false;
       this.idol = new Idol()
     },
-    remove(){},
+    remove(idol){
+      axios.delete('https://evening-savannah-98320.herokuapp.com/api/idol',
+        idol,
+      ).then(response => {
+        if(response.status === 200){
+          this.idol = new Idol()
+          this.idols = this.idols.filter(x=>x._id===idol._id);
+          console.log(response.data);
+          this.toast = new Alert("idol removed",false,true);
+          setTimeout(()=>{
+            this.toast.show = false;
+          },1000);
+        }
+        this.submiting = false
+      }).catch(error => {
+        this.submiting = false
+      })
+    },
     loadMore () {
       console.log(this.page);
       this.busy = true
@@ -90,16 +109,18 @@ export default {
     sendData (form) {
       this.submiting = true
       let formData = new FormData()
-      Object.keys(this.idol).forEach((key) => {
+      console.log(JSON.stringify( this.idol))
+      Object.keys(this.idol).forEach(key => {
         if(key=='_id' && this.isEdit)
           formData.append(key,this.idol[key]);
         else if(key!='_id')
           formData.append(key,this.idol[key]);
       });
+      console.log(formData)
 
       if(this.isEdit){
         axios.patch('https://evening-savannah-98320.herokuapp.com/api/idol',
-        formData
+        this.idol,
       ).then(response => {
         if(response.status === 200){
           this.idol = new Idol()

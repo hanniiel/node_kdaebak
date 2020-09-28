@@ -61,7 +61,7 @@ router.route("/api/idol")
     }
     
 })
-.patch(async(req,res)=>{
+.patch(upload,async(req,res)=>{
     try{
         /*let updates = Object.keys(req.body);
         let allowed = ['profession','_id','name','hangul','avatar','birthday','debut'];
@@ -70,17 +70,39 @@ router.route("/api/idol")
              return res.status(400).send("update operation not allowed");
         }*/
         let id = req.body._id;
-        delete req.body._id;
+       
+        console.log(req.body)
+
+        if(req.file!=null){
+            req.body.avatar =req.file.data.link
+        }
 
         let idol = await Idol.findByIdAndUpdate(id,req.body,{new:true,runValidators:true});
         if(!idol){
-             return res.send(404).send("not idol found");
+            res.status(400).send("not idol found");
         }
         res.send(idol);
     }catch(error){
-        res.status(400).send({error});
+        console.log(error.message);
+        res.status(400).send('tfuk');
     }
 
+})
+.delete(async (req,res)=>{
+    try{
+        console.log(res.body)
+        let id = req.body._id;
+        if(!id){
+            return res.status(400).send('id not provided');
+        }
+        let de = await Idol.deleteOne({_id:id});
+        
+        res.send(de);
+
+    }catch(error){
+        console.log(error.message);
+        res.status(400).send('tfuk');
+    }
 });
 
 router.get("/api/idol/ranking",async(req,res)=>{
