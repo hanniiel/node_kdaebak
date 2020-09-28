@@ -110,7 +110,6 @@ export default {
           this.isEdit = false
           let idol = this.idols.find(x=>x._id===response.data._id);
           idol = response.data;
-          this.toast = new Alert("idol edited",false,true);
           Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -133,7 +132,6 @@ export default {
         if(response.status === 200){
           this.idol = new Idol()
           this.idols.push(response.data);
-          this.toast = new Alert("idol added",false,true);
           Swal.fire({
             position: 'top-end',
             icon: 'success',
