@@ -170,7 +170,7 @@
 </template>
 <script>
 import axios from 'axios'
-
+import Swal from 'sweetalert2'
 export default {
   data () {
     return {
@@ -194,6 +194,13 @@ export default {
         if(response.status==200){
           console.log(response.data)
           this.idol.avatar = response.data.link
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Imaged loaded',
+            showConfirmButton: false,
+            timer: 1500
+          })
         }
       })
       .catch(error=>{

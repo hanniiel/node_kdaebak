@@ -4,25 +4,14 @@
       <idol-form :isSubmiting="submiting" :idol="idol" :edit="isEdit" @cancel-edit="cancelEdit" @send-data="sendData"/>
       <idol-table @load-more="loadMore" :idols='idols' :busy="busy" @edit="edit" @delete="remove" />
     </div>
-    <div v-show="toast.show"
-      class="col-md-6 offset-md-6 alert order-12" :class="toast.error ? 'alert-danger':'alert-success'"
-      role="alert">
-      {{toast.message}}
-    </div>
   </div>
 </template>
 <script>
 import IdolForm from '@/components/IdolForm.vue'
 import Table from '@/components/IdolTable.vue'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
-class Alert{
- constructor(message,error=false,show=false){
-   this.message=message
-   this.error = error
-   this.show = show
- }
-}
 class Idol {
   constructor (_id,name, hangul, nativeName, fullName, profession = [], gender='F', birthday=null, debut=null, active=true,avatar) {
     this._id =_id
@@ -49,7 +38,6 @@ export default {
       isEdit:false,
       idol: new Idol(),
       submiting:false,
-      toast: new Alert()
     }
   },
   emits:['set-idol'],
@@ -81,9 +69,13 @@ export default {
           this.idols = this.idols.filter(x=>x._id!==idol._id);
           console.log(response.data);
           this.toast = new Alert("idol removed",false,true);
-          setTimeout(()=>{
-            this.toast.show = false;
-          },1000);
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Idol deleted',
+            showConfirmButton: false,
+            timer: 1500
+          })
         }
         this.submiting = false
       }).catch(error => {
@@ -119,9 +111,13 @@ export default {
           let idol = this.idols.find(x=>x._id===response.data._id);
           idol = response.data;
           this.toast = new Alert("idol edited",false,true);
-          setTimeout(()=>{
-            this.toast.show = false;
-          },1000);
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'idol edited',
+            showConfirmButton: false,
+            timer: 1500
+          })
         }
         this.submiting = false
       }).catch(error => {
@@ -138,9 +134,13 @@ export default {
           this.idol = new Idol()
           this.idols.push(response.data);
           this.toast = new Alert("idol added",false,true);
-          setTimeout(()=>{
-            this.toast.show = false;
-          },1000);
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Idol created',
+            showConfirmButton: false,
+            timer: 1500
+          })
         }
         this.submiting = false
       }).catch(error => {
