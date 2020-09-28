@@ -90,18 +90,20 @@ router.route("/api/idol")
 })
 .delete(async (req,res)=>{
     try{
-        console.log(res.body)
-        let id = req.body._id;
+        let id = req.query.id;
         if(!id){
             return res.status(400).send('id not provided');
         }
-        let de = await Idol.deleteOne({_id:id});
-        
-        res.send(de);
+        let result = await Idol.deleteOne({_id:id});
+        if(result.deletedCount>0){
+            return res.send('nice');
+        }else{
+            res.status(400).send('no item deleted');
+        }
 
     }catch(error){
         console.log(error.message);
-        res.status(400).send('tfuk');
+        res.status(400).send('sww');
     }
 });
 

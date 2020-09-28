@@ -74,12 +74,11 @@ export default {
       this.idol = new Idol()
     },
     remove(idol){
-      axios.delete('https://evening-savannah-98320.herokuapp.com/api/idol',
-        idol,
+      axios.delete(`https://evening-savannah-98320.herokuapp.com/api/idol?id=${idol._id}`,
       ).then(response => {
         if(response.status === 200){
           this.idol = new Idol()
-          this.idols = this.idols.filter(x=>x._id===idol._id);
+          this.idols = this.idols.filter(x=>x._id!==idol._id);
           console.log(response.data);
           this.toast = new Alert("idol removed",false,true);
           setTimeout(()=>{
