@@ -107,16 +107,8 @@ export default {
     },
     sendData (form) {
       this.submiting = true
-      let formData = new FormData()
-      console.log(JSON.stringify( this.idol))
-      Object.keys(this.idol).forEach(key => {
-        if(key=='_id' && this.isEdit)
-          formData.append(key,this.idol[key]);
-        else if(key!='_id')
-          formData.append(key,this.idol[key]);
-      });
-      console.log(formData)
-
+      
+     
       if(this.isEdit){
         axios.patch('https://evening-savannah-98320.herokuapp.com/api/idol',
         this.idol,
@@ -136,9 +128,11 @@ export default {
         this.submiting = false
       })
         
-      }else{
+      }
+      else{
+        delete this.idol._id;
         axios.post('https://evening-savannah-98320.herokuapp.com/api/idol',
-        formData
+        this.idol
       ).then(response => {
         if(response.status === 200){
           this.idol = new Idol()

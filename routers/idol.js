@@ -41,16 +41,11 @@ router.route("/api/idol")
         res.status(400).send("errro"+e);
     }
 })
-.post(upload, async function(req,res){
-
+.post(async (req,res)=>{
     try{
-        if(!req.file){
-            res.status(400).send({error:"no file specified"});
-        }
-        
+       console.log('ddd')
         let idol = new Idol({
              ...req.body,
-             avatar:req.file.data.link
          });
         
         let result = await idol.save();

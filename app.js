@@ -8,6 +8,9 @@ const groupRouter = require(__dirname+"/routers/group");
 const userRouter = require(__dirname+"/routers/user");
 const voteRouter = require(__dirname+"/routers/vote");
 
+const upload = require(__dirname+"/middleware/upload");
+
+
 const app = express();
 //middleware
 app.use(cors());
@@ -24,17 +27,21 @@ app.set("view engine","ejs");
 app.get("/",function(req,res){
   res.sendFile('public/index.html');
 });
+app.post("/upload",upload, async function(req,res){
+  try{
+    if(req.file==null){
+      return res.status(400).send({error:"no file specified"});
+    }
+    res.send({link:req.file.data.link});
 
-app.get("/group",function(req,res){
-    res.render("group");
-});
-app.get("/idol",function(req,res){
-  res.render("idol");
+  }catch(error){
+    res.status(400).send('error');
+  }
 });
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 3001;
+  port = 3000;
 }
 
 app.listen(port,function(){

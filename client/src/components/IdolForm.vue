@@ -186,8 +186,20 @@ export default {
       var files = e.target.files || e.dataTransfer.files
       if (!files.length) { return }
       console.log('file registered')
+      const formData = new FormData();
+      formData.append('avatar',files[0]);
 
-      this.idol.avatar = files[0]
+      axios.post('https://evening-savannah-98320.herokuapp.com/upload',formData)
+      .then(response=>{
+        if(response.status==200){
+          console.log(response.data)
+          this.idol.avatar = response.data.link
+        }
+      })
+      .catch(error=>{
+          console.log(error);
+      })
+      
     }
   }
 }
