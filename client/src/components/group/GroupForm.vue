@@ -81,6 +81,7 @@
     <div class="custom-file">
       <input
         class="custom-file-input"
+        ref="fileUpload"
         :required="!edit"
         type="file"
         name="avatar"
@@ -130,13 +131,14 @@
 import axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
-  data () {
-    return {
-      submiting: false
-    }
-  },
   props:['edit','group','isSubmiting'],
   emits:['cancel-edit','send-data'],
+  watch:{
+      isSubmiting(value){
+          console.log(value);
+          if(!value) this.$refs.fileUpload.value = null;
+      }
+  },
   methods: {
     
     onChange (e) {

@@ -122,6 +122,7 @@
     </div>
     <div class="custom-file">
       <input
+        ref="fileUpload"
         class="custom-file-input"
         :required="!edit"
         type="file"
@@ -172,14 +173,14 @@
 import axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
-  data () {
-    return {
-     
-      submiting: false
-    }
-  },
   props:['edit','idol','isSubmiting'],
   emits:['cancel-edit','send-data'],
+  watch:{
+      isSubmiting(value){
+          console.log(value);
+          if(!value) this.$refs.fileUpload.value = null;
+      }
+  },
   methods: {
     
     onChange (e) {
