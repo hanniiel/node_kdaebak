@@ -90,7 +90,6 @@ export default {
             this.group = new Group();
             this.groups = this.groups.filter(x => x._id !== group._id);
             console.log(response.data);
-            this.toast = new Alert("idol removed", false, true);
             Swal.fire({
               position: "top-end",
               icon: "success",

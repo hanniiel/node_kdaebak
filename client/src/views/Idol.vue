@@ -98,7 +98,7 @@ export default {
             this.idol = new Idol();
             this.idols = this.idols.filter(x => x._id !== idol._id);
             console.log(response.data);
-            this.toast = new Alert("idol removed", false, true);
+            
             Swal.fire({
               position: "top-end",
               icon: "success",
