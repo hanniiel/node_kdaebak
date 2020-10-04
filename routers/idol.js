@@ -56,7 +56,7 @@ router.route("/api/idol")
     }
     
 })
-.patch(upload,async(req,res)=>{
+.patch(async(req,res)=>{
     try{
         /*let updates = Object.keys(req.body);
         let allowed = ['profession','_id','name','hangul','avatar','birthday','debut'];
@@ -67,10 +67,6 @@ router.route("/api/idol")
         let id = req.body._id;
        
         console.log(req.body)
-
-        if(req.file!=null){
-            req.body.avatar =req.file.data.link
-        }
 
         let idol = await Idol.findByIdAndUpdate(id,req.body,{new:true,runValidators:true});
         if(!idol){

@@ -21,7 +21,7 @@
         class="collapse navbar-collapse"
       >
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <router-link
               class="nav-link"
               to="/"
@@ -35,6 +35,14 @@
               to="/idol"
             >
               <i class="fas fa-user" /> idol
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
+              to="/group"
+            >
+              <i class="fas fa-user" /> Group
             </router-link>
           </li>
         </ul>

@@ -13,7 +13,7 @@ router.route("/api/group")
     let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
     try{
         if(id){
-            let group = await Group.findById(id).populate("members.member").exec();
+            let group = await Group.findById(id).populate("members.member").populate("exmembers.member").populate('subgroups').exec();
             res.send(group);
 
         }else if(name){
@@ -28,7 +28,7 @@ router.route("/api/group")
             }
             res.send(groups);
         }else{
-            var groups = await Group.find({},{},{skip:page*per_page,limit:per_page}).populate("members.member").exec();
+            var groups = await Group.find({},{},{skip:page*per_page,limit:per_page}).populate("members.member").populate("exmembers.member").populate('subgroups').exec();
             res.send(groups);
         }
         
@@ -36,31 +36,32 @@ router.route("/api/group")
         res.status(400).send({error:e});
     }
 })
-.post(upload,async(req,res)=>{
+.post(async(req,res)=>{
     try{
-        if(!req.file){
-            res.status(400).send({error:"file not provided"});
-        }
+     
         console.log(req.body)
-        let group = new Group({
-            ...req.body,
-            avatar:req.file.data.link,
-        });
-        let saved = await group.save();
-        saved.populate()
-        res.send(saved);
+        let group = new Group(req.body);
+        let result = await group.save();
+      
+        res.send(result);
 
     }catch(e){
-        res.status(400).send({error:e});
+        res.status(400).send({error:e.message});
     }
 },(error,req,res,next)=>{
     res.status(400).send({error:error.message});
-}).patch(upload,async(req,res)=>{
+}).patch(async(req,res)=>{
     try{
         console.log(req.body)
 
         let id = req.body._id;
+
         delete req.body._id;
+        delete req.body.members;
+        delete req.body.exmembers;
+        delete req.body.subgroups;
+        console.log(req.body)
+
         let group = await Group.findByIdAndUpdate(id,req.body,{new:true,runValidators:true});
         console.log("fff")
         //update data
@@ -71,6 +72,24 @@ router.route("/api/group")
 
     }catch(e){
         res.status(400).send({error:e});
+    }
+})
+.delete(async(req,res)=>{
+    try{
+        let id = req.query.id;
+        if(!id){
+            return res.status(400).send('id not provided');
+        }
+        let result = await Group.deleteOne({_id:id});
+        if(result.deletedCount>0){
+            return res.send('nice');
+        }else{
+            res.status(400).send('no item deleted');
+        }
+
+    }catch(error){
+        console.log(error.message);
+        res.status(400).send('sww');
     }
 });
 

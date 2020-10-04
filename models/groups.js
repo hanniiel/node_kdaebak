@@ -1,11 +1,30 @@
 const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
-    name:String,
-    hangul:String,
-    avatar:String,
-    debut:Date,
-    active:Boolean,
-    gender:String,
+    name:{
+        type:String,
+        required:true,
+    },
+    hangul:{
+        type:String,
+        required:true,
+    },
+    avatar:{
+        type:String,
+        required:true,
+    },
+    debut:{
+        type:Date,
+        required:true,
+    },
+    state:{
+        type:String,
+        enum:['A','H','D'],
+        required:true,
+    },
+    gender:{
+        type:String,
+        required:true
+    },
     members:[{
         member:{
             type:mongoose.Schema.Types.ObjectId,
@@ -24,6 +43,11 @@ const schema = new mongoose.Schema({
         },
         left:Date,
         reason:String,
+    }],
+    subgroups:[{
+        type:mongoose.Schema.Types.ObjectId,
+        required:false,
+        ref:"Group"
     }]
 });
 var model = new mongoose.model("Group",schema);

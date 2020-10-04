@@ -1,102 +1,94 @@
 <template>
   <div class="container">
-    <div class="row">
-      <idol-form
-        :isSubmiting="submiting"
-        :idol="idol"
+    <div class="row ">
+      <group-form
+        :group="group"
         :edit="isEdit"
+        :isSubmiting="submiting"
         @cancel-edit="cancelEdit"
         @send-data="sendData"
-      />
-      <idol-table
-        @load-more="loadMore"
-        :idols="idols"
-        :busy="busy"
-        @edit="edit"
+      ></group-form>
+      <group-table
+        :groups="groups"
         @delete="remove"
-      />
+        @edit="edit"
+        @load-more="loadMore"
+        :busy="busy"
+      ></group-table>
     </div>
   </div>
 </template>
 <script>
-import IdolForm from "@/components/IdolForm.vue";
-import Table from "@/components/IdolTable.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-class Idol {
+//
+import GroupForm from "../components/group/GroupForm.vue";
+import GroupTable from "../components/group/GroupTable.vue";
+//
+class Group {
   constructor(
     _id,
     name,
     hangul,
-    nativeName,
-    fullName,
-    profession = [],
+    avatar,
+    debut,
+    state = "A",
     gender = "F",
-    birthday = null,
-    debut = null,
-    active = true,
-    avatar
+    members = [],
+    exmembers = [],
+    subgroups = ["5f790d9bb33f8026242f04e0"]
   ) {
     this._id = _id;
     this.name = name;
     this.hangul = hangul;
-    this.nativeName = nativeName;
-    this.fullName = fullName;
-    this.profession = profession;
-    this.gender = gender;
-    this.birthday = birthday;
-    this.debut = debut;
-    this.active = active;
     this.avatar = avatar;
+    this.debut = debut;
+    this.state = state;
+    this.gender = gender;
+    this.members = members;
+    this.exmembers = exmembers;
+    this.subgroups = subgroups;
   }
 }
 
 export default {
   data() {
     return {
-      idols: [],
       limit: 10,
       page: 0,
+      groups: [],
       busy: false,
       isEdit: false,
-      idol: new Idol(),
-      submiting: false
+      submiting: false,
+      group: new Group()
     };
   },
-  emits: ["set-idol"],
   components: {
-    "idol-form": IdolForm,
-    "idol-table": Table
+    GroupForm,
+    GroupTable
   },
   methods: {
-    edit(idol) {
-      this.isEdit = true;
-      console.log(idol.debut);
-      idol.birthday = new Date(idol.birthday).toISOString().slice(0, 10);
-      idol.debut =
-        idol.debut != null
-          ? new Date(idol.debut).toISOString().slice(0, 10)
-          : null;
-      idol.profession = Array.from(idol.profession);
-      delete idol.group;
-      delete idol.__v;
-
-      this.idol = idol;
-    },
     cancelEdit() {
       this.isEdit = false;
-      this.idol = new Idol();
+      this.group = new Group();
     },
-    remove(idol) {
+    edit(group) {
+      this.isEdit = true;
+      group.debut = new Date(group.debut).toISOString().slice(0, 10);
+
+      //delete idol.members
+      //delete idol.__v
+
+      this.group = group;
+    },
+    remove(group) {
       axios
-        .delete(
-          `https://evening-savannah-98320.herokuapp.com/api/idol?id=${idol._id}`
-        )
+        .delete(`http://localhost:3000/api/group?id=${group._id}`)
         .then(response => {
           if (response.status === 200) {
-            this.idol = new Idol();
-            this.idols = this.idols.filter(x => x._id !== idol._id);
+            this.group = new Group();
+            this.groups = this.groups.filter(x => x._id !== group._id);
             console.log(response.data);
             this.toast = new Alert("idol removed", false, true);
             Swal.fire({
@@ -118,11 +110,11 @@ export default {
       this.busy = true;
       axios
         .get(
-          `https://evening-savannah-98320.herokuapp.com/api/idol?per_page=${this.limit}&page=${this.page}`
+          `https://evening-savannah-98320.herokuapp.com/api/group?per_page=${this.limit}&page=${this.page}`
         )
         .then(response => {
           if (response.data.length > 0) {
-            this.idols = this.idols.concat(response.data);
+            this.groups = this.groups.concat(response.data);
             this.page = this.page + 1;
           }
           this.busy = false;
@@ -131,20 +123,20 @@ export default {
           console.log("error");
         });
     },
-    sendData(form) {
+    sendData() {
       this.submiting = true;
 
       if (this.isEdit) {
         axios
           .patch(
-            "https://evening-savannah-98320.herokuapp.com/api/idol",
-            this.idol
+            "http://localhost:3000/api/group",
+            this.group
           )
           .then(response => {
             if (response.status === 200) {
-              this.idol = new Idol();
+              this.group = new Group();
               this.isEdit = false;
-              let idol = this.idols.find(x => x._id === response.data._id);
+              let idol = this.groups.find(x => x._id === response.data._id);
               idol = response.data;
               Swal.fire({
                 position: "top-end",
@@ -160,20 +152,17 @@ export default {
             this.submiting = false;
           });
       } else {
-        delete this.idol._id;
+        delete this.group._id;
         axios
-          .post(
-            "https://evening-savannah-98320.herokuapp.com/api/idol",
-            this.idol
-          )
+          .post("http://localhost:3000/api/group", this.group)
           .then(response => {
             if (response.status === 200) {
-              this.idol = new Idol();
-              this.idols.push(response.data);
+              this.group = new Group();
+              this.groups.push(response.data);
               Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "Idol created",
+                title: "Group created",
                 showConfirmButton: false,
                 timer: 1500
               });
@@ -185,7 +174,6 @@ export default {
           });
       }
     }
-  },
-  mounted() {}
+  }
 };
 </script>
