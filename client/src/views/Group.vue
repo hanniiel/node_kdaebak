@@ -84,7 +84,7 @@ export default {
     },
     remove(group) {
       axios
-        .delete(`http://localhost:3000/api/group?id=${group._id}`)
+        .delete(`https://evening-savannah-98320.herokuapp.com/api/group?id=${group._id}`)
         .then(response => {
           if (response.status === 200) {
             this.group = new Group();
@@ -129,7 +129,7 @@ export default {
       if (this.isEdit) {
         axios
           .patch(
-            "http://localhost:3000/api/group",
+            "https://evening-savannah-98320.herokuapp.com/api/group",
             this.group
           )
           .then(response => {
@@ -154,7 +154,7 @@ export default {
       } else {
         delete this.group._id;
         axios
-          .post("http://localhost:3000/api/group", this.group)
+          .post("https://evening-savannah-98320.herokuapp.com/api/group", this.group)
           .then(response => {
             if (response.status === 200) {
               this.group = new Group();
