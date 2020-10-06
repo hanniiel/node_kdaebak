@@ -30,7 +30,15 @@
         required
       >
     </div>
-
+    <div class="form-group">
+      <label for="fandom">Fandom Name</label>
+      <input
+        v-model="group.fandom"
+        class="form-control"
+        name="fandom"
+        placeholder="ReVeluv"
+      >
+    </div>
     <div class="form-group">
       <label for="gender:">Gender:</label>
       <select

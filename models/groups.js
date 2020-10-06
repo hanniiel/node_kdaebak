@@ -16,6 +16,7 @@ const schema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    fandom:String,
     debut:{
         type:Date,
         required:true,

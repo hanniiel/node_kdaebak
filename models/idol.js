@@ -8,6 +8,7 @@ const schema = new mongoose.Schema({
         type:String,
         required:true
     },
+    fandom:String,
     nativeName:{
         type:String,
         required:true

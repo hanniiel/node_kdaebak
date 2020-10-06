@@ -31,6 +31,7 @@ class Group {
   constructor(
     _id,
     name,
+    fandom,
     hangul,
     avatar,
     logo,
@@ -43,6 +44,7 @@ class Group {
   ) {
     this._id = _id;
     this.name = name;
+    this.fandom= fandom;
     this.hangul = hangul;
     this.avatar = avatar;
     this.logo = logo;
