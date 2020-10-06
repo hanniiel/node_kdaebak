@@ -1,7 +1,7 @@
 <template>
   <form
     id="form"
-    class="col-lg-6 form-group"
+    class="col-lg-6 form-group was-validated"
     action="/api/idol"
     method="post"
     enctype="multipart/form-data"
@@ -85,14 +85,32 @@
         :required="!edit"
         type="file"
         name="avatar"
-        @change="onChange"
+        @change="$emit('on-upload',$event,true)"
       >
       <label
         class="custom-file-label"
         for="validatedCustomFile"
-      >Choose avatar...</label>
-      <div class="invalid-feedback">
-        Example invalid custom file feedback
+      >{{avatarName}}</label>
+      <div  :class="group.avatar!=null? 'valid-feedback':'invalid-feedback'">
+        <img v-if="group.avatar!=null" :src="group.avatar" class="img-thumbnail"  />
+      </div>
+      <br>
+    </div>
+    <div class="custom-file">
+      <input
+        class="custom-file-input"
+        ref="fileLogo"
+        :required="!edit"
+        type="file"
+        name="logo"
+        @change="$emit('on-upload',$event,false)"
+      >
+      <label
+        class="custom-file-label"
+        for="validatedCustomFile"
+      >{{logoName}}</label>
+      <div  :class="group.logo!=null? 'valid-feedback':'invalid-feedback'">
+        <img  v-if="group.logo!=null" :src="group.logo" class="img-thumbnail"  />
       </div>
       <br>
     </div>
@@ -132,41 +150,23 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
   props:['edit','group','isSubmiting'],
-  emits:['cancel-edit','send-data'],
+  emits:['cancel-edit','send-data','on-upload'],
+  computed:{
+    avatarName(){
+      return this.group.avatar !=null ? this.group.avatar :'Choose avatar..';
+    },
+    logoName(){
+      return this.group.logo !=null ? this.group.logo :'Choose logo...';
+    }
+  },
   watch:{
       isSubmiting(value){
           console.log(value);
-          if(!value) this.$refs.fileUpload.value = null;
+          if(!value) {
+            this.$refs.fileUpload.value = null;
+            this.$refs.fileLogo.value = null;
+          }
       }
-  },
-  methods: {
-    
-    onChange (e) {
-      var files = e.target.files || e.dataTransfer.files
-      if (!files.length) { return }
-      console.log('file registered')
-      const formData = new FormData();
-      formData.append('avatar',files[0]);
-
-      axios.post('https://evening-savannah-98320.herokuapp.com/upload',formData)
-      .then(response=>{
-        if(response.status==200){
-          console.log(response.data)
-          this.group.avatar = response.data.link
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Imaged loaded',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        }
-      })
-      .catch(error=>{
-          console.log(error);
-      })
-      
-    }
   }
 }
 </script>

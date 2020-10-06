@@ -12,6 +12,10 @@ const schema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    logo:{
+        type:String,
+        required:true,
+    },
     debut:{
         type:Date,
         required:true,

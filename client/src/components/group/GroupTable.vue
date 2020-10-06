@@ -13,6 +13,9 @@
             Avatar
           </th>
           <th>
+            logo
+          </th>
+          <th>
             State
           </th>
           <th>Actions</th>
@@ -30,6 +33,12 @@
           <td>
             <img
               :src="group.avatar"
+              class="img-thumbnail"
+            >
+          </td>
+          <td>
+            <img
+              :src="group.logo"
               class="img-thumbnail"
             >
           </td>

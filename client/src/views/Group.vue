@@ -7,6 +7,7 @@
         :isSubmiting="submiting"
         @cancel-edit="cancelEdit"
         @send-data="sendData"
+        @on-upload="onChange"
       ></group-form>
       <group-table
         :groups="groups"
@@ -32,6 +33,7 @@ class Group {
     name,
     hangul,
     avatar,
+    logo,
     debut,
     state = "A",
     gender = "F",
@@ -43,6 +45,7 @@ class Group {
     this.name = name;
     this.hangul = hangul;
     this.avatar = avatar;
+    this.logo = logo;
     this.debut = debut;
     this.state = state;
     this.gender = gender;
@@ -172,7 +175,40 @@ export default {
             this.submiting = false;
           });
       }
+    },
+    onChange (e,isAvatar) {
+      var files = e.target.files || e.dataTransfer.files
+      if (!files.length) { return }
+      console.log('file registered')
+
+      const formData = new FormData();
+      formData.append('avatar',files[0]);
+        
+
+      axios.post('https://evening-savannah-98320.herokuapp.com/upload',formData)
+      .then(response=>{
+        if(response.status==200){
+          console.log(response.data)
+          if(isAvatar)
+            this.group.avatar = response.data.link
+          else
+            this.group.logo = response.data.link;
+            
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Imaged loaded',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
+      .catch(error=>{
+          console.log(error);
+      })
+      
     }
+
   }
 };
 </script>
