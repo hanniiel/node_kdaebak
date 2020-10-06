@@ -86,26 +86,38 @@ export default {
       this.group = group;
     },
     remove(group) {
-      axios
-        .delete(`https://evening-savannah-98320.herokuapp.com/api/group?id=${group._id}`)
-        .then(response => {
-          if (response.status === 200) {
-            this.group = new Group();
-            this.groups = this.groups.filter(x => x._id !== group._id);
-            console.log(response.data);
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Idol deleted",
-              showConfirmButton: false,
-              timer: 1500
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        if (result.isConfirmed) {
+          axios
+            .delete(
+              `https://evening-savannah-98320.herokuapp.com/api/group?id=${group._id}`
+            )
+            .then(response => {
+              if (response.status === 200) {
+                this.group = new Group();
+                this.groups = this.groups.filter(x => x._id !== group._id);
+                console.log(response.data);
+                Swal.fire(
+                  "Deleted!",
+                  "Your group has been deleted.",
+                  "success"
+                );
+              }
+              this.submiting = false;
+            })
+            .catch(error => {
+              this.submiting = false;
             });
-          }
-          this.submiting = false;
-        })
-        .catch(error => {
-          this.submiting = false;
-        });
+        }
+      });
     },
     loadMore() {
       console.log(this.page);
@@ -156,7 +168,10 @@ export default {
       } else {
         delete this.group._id;
         axios
-          .post("https://evening-savannah-98320.herokuapp.com/api/group", this.group)
+          .post(
+            "https://evening-savannah-98320.herokuapp.com/api/group",
+            this.group
+          )
           .then(response => {
             if (response.status === 200) {
               this.group = new Group();
@@ -176,39 +191,37 @@ export default {
           });
       }
     },
-    onChange (e,isAvatar) {
-      var files = e.target.files || e.dataTransfer.files
-      if (!files.length) { return }
-      console.log('file registered')
+    onChange(e, isAvatar) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) {
+        return;
+      }
+      console.log("file registered");
 
       const formData = new FormData();
-      formData.append('avatar',files[0]);
-        
+      formData.append("avatar", files[0]);
 
-      axios.post('https://evening-savannah-98320.herokuapp.com/upload',formData)
-      .then(response=>{
-        if(response.status==200){
-          console.log(response.data)
-          if(isAvatar)
-            this.group.avatar = response.data.link
-          else
-            this.group.logo = response.data.link;
-            
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Imaged loaded',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        }
-      })
-      .catch(error=>{
+      axios
+        .post("https://evening-savannah-98320.herokuapp.com/upload", formData)
+        .then(response => {
+          if (response.status == 200) {
+            console.log(response.data);
+            if (isAvatar) this.group.avatar = response.data.link;
+            else this.group.logo = response.data.link;
+
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Imaged loaded",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        })
+        .catch(error => {
           console.log(error);
-      })
-      
+        });
     }
-
   }
 };
 </script>
