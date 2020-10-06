@@ -31,6 +31,7 @@ class Idol {
     hangul,
     nativeName,
     fullName,
+    fandom,
     profession = [],
     gender = "F",
     birthday = null,
@@ -43,6 +44,7 @@ class Idol {
     this.hangul = hangul;
     this.nativeName = nativeName;
     this.fullName = fullName;
+    this.fandom= fandom;
     this.profession = profession;
     this.gender = gender;
     this.birthday = birthday;
