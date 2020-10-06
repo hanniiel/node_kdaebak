@@ -89,29 +89,35 @@ export default {
       this.idol = new Idol();
     },
     remove(idol) {
-      axios
-        .delete(
-          `https://evening-savannah-98320.herokuapp.com/api/idol?id=${idol._id}`
-        )
-        .then(response => {
-          if (response.status === 200) {
-            this.idol = new Idol();
-            this.idols = this.idols.filter(x => x._id !== idol._id);
-            console.log(response.data);
-            
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Idol deleted",
-              showConfirmButton: false,
-              timer: 1500
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: `Yes, delete ${idol.name} it!`
+      }).then(result => {
+        if (result.isConfirmed) {
+          axios
+            .delete(
+              `https://evening-savannah-98320.herokuapp.com/api/idol?id=${idol._id}`
+            )
+            .then(response => {
+              if (response.status === 200) {
+                this.idol = new Idol();
+                this.idols = this.idols.filter(x => x._id !== idol._id);
+                console.log(response.data);
+
+                Swal.fire("Deleted!", "Your idol has been deleted.", "success");
+              }
+              this.submiting = false;
+            })
+            .catch(error => {
+              this.submiting = false;
             });
-          }
-          this.submiting = false;
-        })
-        .catch(error => {
-          this.submiting = false;
-        });
+        }
+      });
     },
     loadMore() {
       console.log(this.page);
