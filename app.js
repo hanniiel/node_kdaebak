@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express= require("express");
 const cors = require('cors');
+const history = require('connect-history-api-fallback');
 
 require(__dirname+"/models/connection");
 const idolRouter = require(__dirname+ "/routers/idol");
@@ -13,6 +14,16 @@ const upload = require(__dirname+"/middleware/upload");
 
 const app = express();
 //middleware
+app.use(history({
+  rewrites:[
+    {
+      from:/\/api/,
+      to:function(context){
+        return context.parsedUrl.pathname;
+      }
+    }
+  ]
+}));
 app.use(cors());
 app.use(express.json());
 
@@ -22,11 +33,9 @@ app.use(userRouter);
 app.use(voteRouter);
 app.use(express.static("public"));
 
-app.set("view engine","ejs");
 
-app.get("/",function(req,res){
-  res.sendFile('public/index.html');
-});
+
+
 app.post("/upload",upload, async function(req,res){
   try{
     if(req.file==null){
