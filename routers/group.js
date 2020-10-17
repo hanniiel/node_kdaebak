@@ -160,6 +160,7 @@ router.get("/api/group/ranking",async(req,res)=>{
                     debut:{$first:"$debut"},
                     active:{$first:"$active"},
                     avatar:{$first:"$avatar"},
+                    logo:{$first:"$logo"},
                     votes:{$sum:"$idol_docs.votes"}
                     
                 }
