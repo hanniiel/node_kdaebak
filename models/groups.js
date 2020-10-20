@@ -54,7 +54,7 @@ const schema = new mongoose.Schema({
         required:false,
         ref:"Group"
     }]
-});
+},{timestamps:true});
 var model = new mongoose.model("Group",schema);
 
 

@@ -40,7 +40,7 @@ const schema = new mongoose.Schema({
         type:String,
         required:true
     }
-},{ id:false, toJSON: { virtuals: true }, toObject: { virtuals: true }});
+},{ timestamps:true, id:false, toJSON: { virtuals: true }, toObject: { virtuals: true }});
 
 schema.virtual("group",{
     ref:"Group",
