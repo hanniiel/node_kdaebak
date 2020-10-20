@@ -40,7 +40,7 @@ class Group {
     gender = "F",
     members = [],
     exmembers = [],
-    subgroups = ["5f790d9bb33f8026242f04e0"]
+    subgroups = []
   ) {
     this._id = _id;
     this.name = name;
