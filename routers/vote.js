@@ -2,11 +2,16 @@ const moment = require("moment");
 const express = require("express");
 const router = express.Router();
 const Vote = require("../models/vote").Model;
+const authFire = require("../middleware/authFire");
 
 router.route("/api/vote")
-.post(async(req,res)=>{
+.post(authFire,async(req,res)=>{
     try{
-        let vote = new Vote(req.body);
+        let vote = new Vote({
+            ...req.body,
+            user:req.user._id
+        });
+        // TODO: remove currency and update it
         let saved = await vote.save();
         res.send(saved);
     }catch(e){

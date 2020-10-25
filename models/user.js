@@ -5,10 +5,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const schema = mongoose.Schema({
+    _id:String,
     name:String,
+    currency:{
+        type:Number,
+        default:100
+    },
     password:{
         type:String,
-        required:true,
         trim:true
     },
     email:{
@@ -36,7 +40,6 @@ const schema = mongoose.Schema({
 schema.methods.toJSON = function(){
     const user = this;
     const userObj = user.toObject();
-
     delete userObj.password;
     delete userObj.tokens;
 

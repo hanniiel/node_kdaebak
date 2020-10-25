@@ -2,7 +2,14 @@ require("dotenv").config();
 const express= require("express");
 const cors = require('cors');
 const history = require('connect-history-api-fallback');
+//firebase admin impl
+const admin = require("firebase-admin");
 
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)),
+  databaseURL: "https://kdaebakapp.firebaseio.com"
+});
+//
 require(__dirname+"/models/connection");
 const idolRouter = require(__dirname+ "/routers/idol");
 const groupRouter = require(__dirname+"/routers/group");
@@ -33,9 +40,6 @@ app.use(userRouter);
 app.use(voteRouter);
 app.use(express.static("public"));
 
-
-
-
 app.post("/upload",upload, async function(req,res){
   try{
     if(req.file==null){
@@ -54,5 +58,5 @@ if (port == null || port == "") {
 }
 
 app.listen(port,function(){
-    console.log("server started");
+  console.log("server started");
 });

@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema({
     user:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         required:true,
         ref:"User"
     },
     idol:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Idol"
+    },
+    act:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Idol"
     },
