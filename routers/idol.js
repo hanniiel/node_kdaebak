@@ -115,8 +115,8 @@ router.get("/api/idol/ranking",async(req,res)=>{
                 end = moment().utc(false).endOf('day').toDate();
                 break;
             case 'weekly':
-                start = moment().utc(false).startOf("isoWeek").toDate();
-                end = moment().utc(false).endOf("isoWeek").toDate();
+                start = moment().utc(true).startOf("isoWeek").toDate();
+                end = moment().utc(true).endOf("isoWeek").toDate();
                 break;
             case 'monthly':
                 start = moment().utc(false).startOf('month').toDate();

@@ -3,8 +3,10 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const User = require("../models/user").Model;
 
+const authFire = require("../middleware/authFire");
+
 router.route("/api/user")
-.get(auth,async(req,res)=>{
+.get(authFire,async(req,res)=>{
     res.send(req.user);
 })
 .post(async(req,res)=>{
@@ -13,7 +15,36 @@ router.route("/api/user")
       var token = await user.genAuthToken();
       res.status(201).send({user,token});
     }catch(e){
-        res.status(401).send({error:'Bad request '+e});
+        res.status(400).send({error:'Bad request '+e.message});
+    }
+})
+.patch(authFire,async(req,res)=>{
+    try{
+        //valdiate params to update
+        let updates = Object.keys(req.body);
+        let allowed = ['email','name'];
+        let isValid = updates.every((key)=>allowed.includes(key));
+        if(!isValid){
+             return res.status(401).send("update operation not allowed");
+        }
+        const user = await User.findByIdAndUpdate(req.user._id,req.body,{new:true,runValidators:true});
+        res.send(user);
+    }catch(e){
+        res.status(400).send(e);
+    }
+});
+router.patch('/api/user/currency',authFire,async(req,res)=>{
+    try{
+        if(!req.body.currency)
+        {
+            throw new Error("Currency not provided");
+        }
+        const user = req.user;
+        user.currency += req.body.currency;
+        const updatedUser = await user.save();
+        res.send(updatedUser);
+    }catch(e){
+        res.status(400).send(e.message);
     }
 });
 

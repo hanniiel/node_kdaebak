@@ -7,15 +7,22 @@ const authFire = require("../middleware/authFire");
 router.route("/api/vote")
 .post(authFire,async(req,res)=>{
     try{
-        let vote = new Vote({
-            ...req.body,
-            user:req.user._id
-        });
-        // TODO: remove currency and update it
-        let saved = await vote.save();
-        res.send(saved);
+        const user = req.user;
+
+        if(user.currency>=req.body.votes){
+            let vote = new Vote({
+                ...req.body,
+                user:req.user._id
+            });
+            user.currency -= req.body.votes;
+            await user.save();
+            let saved = await vote.save();
+            res.send(saved);
+        }else{
+            throw new Error('Get more hearts to vote');
+        }
     }catch(e){
-        res.status(400).send({error:e});
+        res.status(400).send({error:e.message});
     }
 })
 .get(async(req,res)=>{
