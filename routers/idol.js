@@ -104,6 +104,7 @@ router.get("/api/idol/ranking",async(req,res)=>{
     let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
     let range = req.query.range ? req.query.range : 'daily'
     let gender = req.query.gender ?  req.query.gender : 'F';
+    let profession = req.query.profession ?  req.query.profession : 'I';
 
     try{
 
@@ -135,7 +136,8 @@ router.get("/api/idol/ranking",async(req,res)=>{
         let idols = await Idol.aggregate([
             {
                 $match:{
-                    gender:{$regex: gender,$options:'i'}
+                    gender:{$regex: gender,$options:'i'},
+                    profession: {$regex: profession,$options:'ic'}
                 }
             },
             {
