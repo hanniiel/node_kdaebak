@@ -105,6 +105,7 @@ router.get("/api/idol/ranking",async(req,res)=>{
     let range = req.query.range ? req.query.range : 'daily'
     let gender = req.query.gender ?  req.query.gender : 'F';
     let profession = req.query.profession ?  req.query.profession : 'I';
+    let voteIdentity = profession.toLocaleLowerCase()==='i' ?'$idol' : '$act';
 
     try{
 
@@ -137,7 +138,7 @@ router.get("/api/idol/ranking",async(req,res)=>{
             {
                 $match:{
                     gender:{$regex: gender,$options:'i'},
-                    profession: {$regex: profession,$options:'ic'}
+                    profession: {$regex: profession,$options:'i'}
                 }
             },
             {
@@ -149,7 +150,7 @@ router.get("/api/idol/ranking",async(req,res)=>{
                             $match:{
                                 createdAt:{$gte:start,$lte:end},
                                 $expr:{
-                                    $eq:["$idol","$$idol"]
+                                    $eq:[voteIdentity,"$$idol"]
                                 }
                             }
                         }
