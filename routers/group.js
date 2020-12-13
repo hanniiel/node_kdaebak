@@ -96,7 +96,7 @@ router.route("/api/group")
 router.get("/api/group/ranking",async(req,res)=>{
     let page = parseInt(req.query.page ? req.query.page : 0);
     let per_page = parseInt(req.query.per_page ? req.query.per_page: 20);
-    let range = req.query.range ? req.query.range : 'weekly'
+    let range = req.query.range ? req.query.range : 'daily'
     let gender = req.query.gender ?  req.query.gender : 'F';
 
     try{
@@ -117,8 +117,8 @@ router.get("/api/group/ranking",async(req,res)=>{
                 end = moment().utc(false).endOf('month').toDate();
                 break;
             default :
-                start = moment().utc(false).startOf("isoWeek").toDate();
-                end = moment().utc(false).endOf("isoWeek").toDate();
+                start = moment().utc(false).startOf('day').toDate();
+                end = moment().utc(false).endOf('day').toDate();
                 break;
         }
 
