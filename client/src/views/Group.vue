@@ -204,7 +204,7 @@ export default {
       formData.append("avatar", files[0]);
 
       axios
-        .post("https://evening-savannah-98320.herokuapp.com/upload", formData)
+        .post("/upload", formData)
         .then(response => {
           if (response.status == 200) {
             console.log(response.data);
@@ -221,6 +221,9 @@ export default {
           }
         })
         .catch(error => {
+          if (isAvatar) this.group.avatar = null;
+          else this.group.logo = null;
+          
           console.log(error);
         });
     }

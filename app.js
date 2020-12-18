@@ -48,6 +48,7 @@ app.post("/upload",upload, async function(req,res){
     res.send({link:req.file.data.link});
 
   }catch(error){
+    console.log(error);
     res.status(400).send('error');
   }
 });
