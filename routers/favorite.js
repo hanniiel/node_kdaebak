@@ -22,12 +22,12 @@ router.route('/api/favorite/user')
     try{
         let query = {
             ...req.query,
-            user:req.user_.id
+            user:req.user._id
         };
         let result = await Favorite.find(query);
         res.send(result);
     }catch(error){
-        res.status(400).send({error});
+        res.status(400).send({error:error.message});
     }
 })
 .post(authFire,async(req,res)=>{
