@@ -15,6 +15,7 @@ const idolRouter = require(__dirname+ "/routers/idol");
 const groupRouter = require(__dirname+"/routers/group");
 const userRouter = require(__dirname+"/routers/user");
 const voteRouter = require(__dirname+"/routers/vote");
+const faveRotuer = require(__dirname+'/routers/favorite');
 
 const upload = require(__dirname+"/middleware/upload");
 
@@ -38,6 +39,7 @@ app.use(idolRouter);
 app.use(groupRouter);
 app.use(userRouter);
 app.use(voteRouter);
+app.use(faveRotuer);
 app.use(express.static("public"));
 
 app.post("/upload",upload, async function(req,res){
