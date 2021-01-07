@@ -21,7 +21,7 @@ router.route('/api/favorite/user')
 .get(authFire,async(req,res)=>{
     try{
         let query = {
-            ...req.body,
+            ...req.query,
             user:req.user_.id
         };
         let result = await Favorite.find(query);
