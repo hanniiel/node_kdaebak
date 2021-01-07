@@ -38,8 +38,10 @@ router.route('/api/favorite/user')
             ...req.body,
             user:req.user._id
         });
+        
         if(exists){
-            res.send(exists);
+            let result = await exists.remove();
+            res.send(result);
         }else{
             let fave = new Favorite({
                 ...req.body,
