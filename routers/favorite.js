@@ -26,8 +26,8 @@ router.route('/api/favorite/user')
         };
         let result = await Favorite.find(query);
         res.send(result);
-    }catch(e){
-        res.status(400).send(e);
+    }catch(error){
+        res.status(400).send({error});
     }
 })
 .post(authFire,async(req,res)=>{
