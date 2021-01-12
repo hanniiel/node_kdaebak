@@ -3,10 +3,12 @@ const schema = mongoose.Schema({
     source:{
         type:String,
         required:true,
+        index:true,
     },
     post:{
         type:String,
         required:true,
+        index:true,
     },
     image:String,
     title:String,
