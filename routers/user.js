@@ -12,6 +12,7 @@ router.route("/api/user")
 .post(async(req,res)=>{
     try{
       var user = new User(req.body);
+      user.role ="user";
       var token = await user.genAuthToken();
       res.status(201).send({user,token});
     }catch(e){

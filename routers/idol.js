@@ -2,10 +2,10 @@ const moment = require("moment");
 const express = require("express");
 const router = express.Router();
 const Idol = require("../models/idol.js").Model;
-const upload = require("../middleware/upload");
+const auth = require("../middleware/authFire");
 
 router.route("/api/idol")
-.get(async (req,res)=>{
+.get(async(req,res)=>{
     let id= req.query.id;
     //pagination
     let page = parseInt(req.query.page ? req.query.page : 0);
@@ -41,8 +41,11 @@ router.route("/api/idol")
         res.status(400).send("errro"+e);
     }
 })
-.post(async (req,res)=>{
+.post(auth,async(req,res)=>{
     try{
+        if(req.user.role!="admin"){
+            return res.status(401).send({error:"not authorized"});
+        }
        console.log('ddd')
         let idol = new Idol({
              ...req.body,
@@ -56,7 +59,7 @@ router.route("/api/idol")
     }
     
 })
-.patch(async(req,res)=>{
+.patch(auth,async(req,res)=>{
     try{
         /*let updates = Object.keys(req.body);
         let allowed = ['profession','_id','name','hangul','avatar','birthday','debut'];
@@ -64,6 +67,9 @@ router.route("/api/idol")
         if(!isValid){
              return res.status(400).send("update operation not allowed");
         }*/
+        if(req.user.role!="admin"){
+            return res.status(401).send({error:"not authorized"});
+        }
         let id = req.body._id;
        
         console.log(req.body)
@@ -79,8 +85,11 @@ router.route("/api/idol")
     }
 
 })
-.delete(async (req,res)=>{
+.delete(auth,async(req,res)=>{
     try{
+        if(req.user.role!="admin"){
+            return res.status(401).send({error:"not authorized"});
+        }
         let id = req.query.id;
         if(!id){
             return res.status(400).send('id not provided');

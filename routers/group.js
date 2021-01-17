@@ -2,10 +2,11 @@ const moment = require("moment");
 const express = require("express");
 const router = express.Router();
 const Group = require("../models/groups").Model;
-const upload = require("../middleware/upload");
+const auth = require("../middleware/authFire");
+
 
 router.route("/api/group")
-.get(async (req,res)=>{
+.get(async(req,res)=>{
     let id= req.query.id;
     let name= req.query.name;
     //pagination
@@ -36,9 +37,11 @@ router.route("/api/group")
         res.status(400).send({error:e});
     }
 })
-.post(async(req,res)=>{
+.post(auth,async(req,res)=>{
     try{
-     
+        if(req.user.role!="admin"){
+            return res.status(401).send({error:"not authorized"});
+        }
         console.log(req.body)
         let group = new Group(req.body);
         let result = await group.save();
@@ -50,10 +53,12 @@ router.route("/api/group")
     }
 },(error,req,res,next)=>{
     res.status(400).send({error:error.message});
-}).patch(async(req,res)=>{
+}).patch(auth,async(req,res)=>{
     try{
+        if(req.user.role!="admin"){
+            return res.status(401).send({error:"not authorized"});
+        }
         console.log(req.body)
-
         let id = req.body._id;
 
         delete req.body._id;
@@ -74,8 +79,11 @@ router.route("/api/group")
         res.status(400).send({error:e});
     }
 })
-.delete(async(req,res)=>{
+.delete(auth,async(req,res)=>{
     try{
+        if(req.user.role!="admin"){
+            return res.status(401).send({error:"not authorized"});
+        }
         let id = req.query.id;
         if(!id){
             return res.status(400).send('id not provided');
