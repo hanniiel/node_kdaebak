@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav v-show="isLoggedIn" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a
         class="navbar-brand"
         href="#"
@@ -42,8 +42,14 @@
               class="nav-link"
               to="/group"
             >
-              <i class="fas fa-user" /> Group
+              <i class="fas fa-users" /> Group
             </router-link>
+          </li>
+          <li v-show="isLoggedIn" class="nav-item">
+            <a
+              class="nav-link" @click="logOut">
+              <i class="fas fa-sign-out-alt" /> Log out
+            </a>
           </li>
         </ul>
       </div>
@@ -51,3 +57,28 @@
     <router-view />
   </div>
 </template>
+<script>
+import {mapActions, mapGetters,mapMutations} from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+
+export default{
+  methods:{
+    ...mapActions(['setUser','logOut']),
+    ...mapMutations(['unsetUser'])
+  },
+  computed:{
+    ...mapGetters(['isLoggedIn'])
+  },
+  mounted(){
+    firebase.auth().onAuthStateChanged((user)=>{
+      if(user==null){
+        console.log('user not logged in')
+        this.unsetUser()
+      }else{
+       this.setUser(user)
+      }
+    });
+  }
+}
+</script>

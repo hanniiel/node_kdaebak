@@ -11,7 +11,12 @@
       <h1>Crear idol</h1>
     </div>
     <div class="form-group">
-      <input v-if="edit" name="_id" v-model="idol._id" type="hidden" />
+      <input
+        v-if="edit"
+        v-model="idol._id"
+        name="_id"
+        type="hidden"
+      >
       <label for="name">(Artistic)Romanized Name</label>
       <input
         v-model="idol.name"
@@ -19,7 +24,7 @@
         name="name"
         placeholder="Name"
         required
-      />
+      >
     </div>
     <div class="form-group">
       <label for="hangul">(Artistic)Hangul Name</label>
@@ -29,7 +34,7 @@
         name="hangul"
         placeholder="Korean Name"
         required
-      />
+      >
     </div>
     <div class="form-group">
       <label for="nativeName">(Native language) Name</label>
@@ -39,7 +44,7 @@
         name="nativeName"
         placeholder="Native Name(hangul,japanese etc)"
         required
-      />
+      >
     </div>
     <div class="form-group">
       <label for="fullName">Full Name (Romanized)</label>
@@ -49,7 +54,7 @@
         name="fullName"
         placeholder="Full  Name"
         required
-      />
+      >
     </div>
     <div class="form-group">
       <label for="fandom">Fandom Name</label>
@@ -58,7 +63,7 @@
         class="form-control"
         name="fandom"
         placeholder="ReVeluv"
-      />
+      >
     </div>
     <div class="form-group">
       <label for="profession:">Profession (multiple allowed)</label>
@@ -82,7 +87,12 @@
     </div>
     <div class="form-group">
       <label for="gender:">Gender:</label>
-      <select v-model="idol.gender" class="form-control" name="gender" required>
+      <select
+        v-model="idol.gender"
+        class="form-control"
+        name="gender"
+        required
+      >
         <option value="M">
           Male
         </option>
@@ -100,7 +110,7 @@
         name="birthday"
         placeholder="bd"
         required
-      />
+      >
     </div>
     <div class="form-group">
       <label for="debut">Debut</label>
@@ -110,7 +120,7 @@
         type="date"
         name="debut"
         placeholder="debut"
-      />
+      >
     </div>
     <div class="form-check">
       <input
@@ -118,10 +128,12 @@
         class="form-check-input"
         type="checkbox"
         name="active"
-      />
-      <label class="form-check-label" for="exampleCheck1">
-        isCurrentlyActive</label
       >
+      <label
+        class="form-check-label"
+        for="exampleCheck1"
+      >
+        isCurrentlyActive</label>
     </div>
     <div class="custom-file">
       <input
@@ -131,14 +143,19 @@
         type="file"
         name="avatar"
         @change="onChange"
-      />
-      <label class="custom-file-label" for="validatedCustomFile"
-        >{{avatarName}}</label
       >
-      <div  :class="idol.avatar!=null? 'valid-feedback':'invalid-feedback'">
-        <img v-if="idol.avatar!=null" :src="idol.avatar" class="img-thumbnail"  />
+      <label
+        class="custom-file-label"
+        for="validatedCustomFile"
+      >{{ avatarName }}</label>
+      <div :class="idol.avatar!=null? 'valid-feedback':'invalid-feedback'">
+        <img
+          v-if="idol.avatar!=null"
+          :src="idol.avatar"
+          class="img-thumbnail"
+        >
       </div>
-      <br />
+      <br>
     </div>
 
     <div class="form-group">
@@ -150,68 +167,74 @@
         {{ edit ? "Editar" : "Crear" }}
       </button>
       <button
-        @click="$emit('cancel-edit')"
         v-if="edit"
         class="btn btn-primary btn-lg"
         style="margin: 1%;"
+        @click="$emit('cancel-edit')"
       >
         cancel edition
       </button>
     </div>
-    <div v-if="isSubmiting" class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
+    <div
+      v-if="isSubmiting"
+      class="d-flex justify-content-center"
+    >
+      <div
+        class="spinner-border"
+        role="status"
+      >
         <span class="sr-only">Loading...</span>
       </div>
     </div>
   </form>
 </template>
 <script>
-import axios from "axios";
-import Swal from "sweetalert2";
+import axios from 'axios'
+import Swal from 'sweetalert2'
 export default {
-  props: ["edit", "idol", "isSubmiting"],
-  emits: ["cancel-edit", "send-data"],
-  watch: {
-    isSubmiting(value) {
-      console.log(value);
-      if (!value) this.$refs.fileUpload.value = null;
+  props: ['edit', 'idol', 'isSubmiting'],
+  emits: ['cancel-edit', 'send-data'],
+  computed: {
+    avatarName () {
+      return this.idol.avatar != null ? this.idol.avatar : 'Choose avatar..'
     }
   },
-  computed:{
-    avatarName(){
-       return this.idol.avatar !=null ? this.idol.avatar :'Choose avatar..';
+  watch: {
+    isSubmiting (value) {
+      console.log(value)
+      if (!value) this.$refs.fileUpload.value = null
     }
   },
   methods: {
-    onChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
+    onChange (e) {
+      var files = e.target.files || e.dataTransfer.files
       if (!files.length) {
-        return;
+        return
       }
-      console.log("file registered");
-      const formData = new FormData();
-      formData.append("avatar", files[0]);
+      console.log('file registered')
+      const formData = new FormData()
+      formData.append('avatar', files[0])
 
       axios
-        .post("/upload", formData)
+        .post('/upload', formData)
         .then(response => {
           if (response.status == 200) {
-            console.log(response.data);
-            this.idol.avatar = response.data.link;
+            console.log(response.data)
+            this.idol.avatar = response.data.link
             Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Imaged loaded",
+              position: 'top-end',
+              icon: 'success',
+              title: 'Imaged loaded',
               showConfirmButton: false,
               timer: 1500
-            });
+            })
           }
         })
         .catch(error => {
-          this.$refs.fileUpload.value = null;
-          console.log(error);
-        });
+          this.$refs.fileUpload.value = null
+          console.log(error)
+        })
     }
   }
-};
+}
 </script>

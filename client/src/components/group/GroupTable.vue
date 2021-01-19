@@ -42,23 +42,41 @@
               class="img-thumbnail"
             >
           </td>
-          <td><span class="badge" :class="getStyle(group.state)" >{{getStatus(group.state)}}</span></td>
           <td>
-            <span class="btn btn-success" style="color:white"><i class="fa fa-group"></i></span>
-            <span @click="$emit('edit',group)" class="btn btn-warning" style="color:white"><i class="fa fa-pencil"></i></span>
-            <span @click="$emit('delete',group)" class="btn btn-danger"><i class="fa fa-trash"></i></span>
+            <span
+              class="badge"
+              :class="getStyle(group.state)"
+            >{{ getStatus(group.state) }}</span>
+          </td>
+          <td>
+            <span
+              class="btn btn-success"
+              style="color:white"
+            ><i class="fa fa-group" /></span>
+            <span
+              class="btn btn-warning"
+              style="color:white"
+              @click="$emit('edit',group)"
+            ><i class="fa fa-pencil" /></span>
+            <span
+              class="btn btn-danger"
+              @click="$emit('delete',group)"
+            ><i class="fa fa-trash" /></span>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="col" id="obs"></div>
+    <div
+      id="obs"
+      class="col"
+    />
   </div>
 </template>
 <style>
     #obs{
       height: 5px;
     }
-   
+
     .my-custom-scrollbar {
         position: relative;
         height: 500px;
@@ -72,46 +90,46 @@
 <script>
 import axios from 'axios'
 export default {
+  props: {
+    busy: Boolean,
+    groups: Array
+  },
+  // emits:{'event-ex':function(paramter){/*validation */}},
+  emits: ['load-more', 'edit', 'delete', 'group'],
   data () {
     return {
-      observer:null,
+      observer: null
     }
   },
-  //emits:{'event-ex':function(paramter){/*validation */}},
-  emits:['load-more','edit','delete','group'],
-  props:{
-    busy:Boolean,
-    groups:Array
-  },
-  methods:{
-      getStatus(status){
-         switch(status){
-             case 'A':
-                return 'Active';
-            case 'H':
-                return 'Hiatus';
-            case 'D':
-                return 'Disbanded';
-         }
-      },
-      getStyle(status){
-         switch(status){
-             case 'A':
-                return 'badge-success';
-            case 'H':
-                return 'badge-warning';
-            case 'D':
-                return 'badge-danger';
-         }
+  mounted () {
+    this.observer = new IntersectionObserver(([entry]) => {
+      if (entry && entry.isIntersecting) {
+        if (!this.busy) this.$emit('load-more')
       }
+    }, { threshold: [1] })
+    this.observer.observe(document.getElementById('obs'))
   },
-  mounted(){
-     this.observer = new IntersectionObserver(([entry])=>{
-      if(entry && entry.isIntersecting){
-        if(!this.busy) this.$emit('load-more');
+  methods: {
+    getStatus (status) {
+      switch (status) {
+        case 'A':
+          return 'Active'
+        case 'H':
+          return 'Hiatus'
+        case 'D':
+          return 'Disbanded'
       }
-    },{threshold:[1]});
-    this.observer.observe(document.getElementById('obs'));
+    },
+    getStyle (status) {
+      switch (status) {
+        case 'A':
+          return 'badge-success'
+        case 'H':
+          return 'badge-warning'
+        case 'D':
+          return 'badge-danger'
+      }
+    }
   }
 }
 

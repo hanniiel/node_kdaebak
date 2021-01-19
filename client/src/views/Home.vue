@@ -4,12 +4,27 @@
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card card-signin my-5">
           <div class="card-body">
-            <h5 class="card-title text-center">Sign In</h5>
-            <form class="form-signin" @submit.prevent>
+            <h5 class="card-title text-center">
+              {{ getUser==null ? 'Sign In': `welcome: ${getUser.displayName}` }}
+            </h5>
+            <form v-show="!isLoggedIn"
+              class="form-signin"
+              @submit.prevent
+            >
               <!--<button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>-->
               <hr class="my-4">
-              <button class="btn btn-lg btn-google btn-block text-uppercase" @click="loginGoogleAuth"><i class="fab fa-google mr-2"></i> Sign in with Google</button>
-              <button class="btn btn-lg btn-facebook btn-block text-uppercase" @click="loginFBAuth"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+              <button
+                class="btn btn-lg btn-google btn-block text-uppercase"
+                @click="loginGoogle"
+              >
+                <i class="fab fa-google mr-2" /> Sign in with Google
+              </button>
+              <button
+                class="btn btn-lg btn-facebook btn-block text-uppercase"
+                @click="loginFB"
+              >
+                <i class="fab fa-facebook-f mr-2" /> Sign in with Facebook
+              </button>
             </form>
           </div>
         </div>
@@ -21,32 +36,18 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import firebase from 'firebase'
+import {mapActions,mapGetters} from 'vuex'
 
 export default {
   name: 'Home',
   components: {
     HelloWorld
   },
-  methods:{
-    async loginGoogleAuth(){
-      var provider = new firebase.auth.GoogleAuthProvider();
-      provider.addScope('profile');
-      provider.addScope('email');
-      console.log('google auth');
-      try{
-        var result = await firebase.auth().signInWithPopup(provider)
-        var credential = result.credential
-        var token = credential.accessToken
-        var jwt = await result.user.getIdTokenResult();
-        console.log(jwt.token)
-      }catch(e){
-        console.log('error'+e)
-      }
-    },
-    loginFBAuth(){
-      console.log('fb auth');
-    }
+  methods: {
+    ...mapActions(['loginGoogle','loginFB'])
+  },
+  computed:{
+    ...mapGetters(['isLoggedIn','getUser'])
   }
 }
 </script>
