@@ -2,9 +2,9 @@
   "name": "express-server",
   "version": "1.0.0",
   "description": "a test to express server",
-  "main": "server.js",
+  "main": "functions/app.js",
   "scripts": {
-    "build": "netlify/functions build app.js",
+    "build": "netlify-lambda build app.js",
     "test": "nodemon local.js",
     "start": "node local.js"
   },
@@ -30,5 +30,7 @@
     "serverless-http": "^3.1.1",
     "validator": "^13.7.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "netlify-lambda": "^2.0.15"
+  }
 }
