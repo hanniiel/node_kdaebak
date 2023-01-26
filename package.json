@@ -4,6 +4,7 @@
   "description": "a test to express server",
   "main": "server.js",
   "scripts": {
+    "build": "netlify-lambda build app.js",
     "test": "nodemon app.js",
     "start": "node app.js"
   },
@@ -26,6 +27,7 @@
     "multer": "^1.4.5-lts.1",
     "multer-storage-imgur": "^1.0.4",
     "rijndael-js": "^2.0.0",
+    "serverless-http": "^3.1.1",
     "validator": "^13.7.0"
   },
   "devDependencies": {}
