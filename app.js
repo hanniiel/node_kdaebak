@@ -1,24 +1,20 @@
 require("dotenv").config();
 const express = require("express");
+const serverless = require("serverless-http");
 const cors = require("cors");
 const history = require("connect-history-api-fallback");
 //firebase admin impl
 const admin = require("firebase-admin");
-import { initializeApp, cert } from "firebase-admin/app";
-initializeApp({
-  credential: cert(config.GOOGLE_APPLICATION_CREDENTIALS),
-  databaseURL: "https://kdaebakapp.firebaseio.com",
-});
 
 //
-require(__dirname + "/models/connection");
-const idolRouter = require(__dirname + "/routers/idol");
-const groupRouter = require(__dirname + "/routers/group");
-const userRouter = require(__dirname + "/routers/user");
-const voteRouter = require(__dirname + "/routers/vote");
-const faveRotuer = require(__dirname + "/routers/favorite");
+require("./models/connection");
+const idolRouter = require("./routers/idol");
+const groupRouter = require("./routers/group");
+const userRouter = require("./routers/user");
+const voteRouter = require("./routers/vote");
+const faveRotuer = require("./routers/favorite");
 
-const upload = require(__dirname + "/middleware/upload");
+const upload = require("./middleware/upload");
 
 const app = express();
 //middleware
@@ -56,11 +52,5 @@ app.post("/upload", upload, async function (req, res) {
   }
 });
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
-
-app.listen(port, function () {
-  console.log("server started");
-});
+module.exports = app;
+module.exports.handler = serverless(app);
