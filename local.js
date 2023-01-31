@@ -1,4 +1,4 @@
-const app = require("./express/app");
+const app = require("./app");
 
 let port = process.env.PORT;
 if (port == null || port == "") {

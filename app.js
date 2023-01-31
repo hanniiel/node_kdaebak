@@ -13,14 +13,14 @@ admin.initializeApp({
   databaseURL: "https://kdaebakapp.firebaseio.com",
 });
 //
-require("../models/connection");
-const idolRouter = require("../routers/idol");
-const groupRouter = require("../routers/group");
-const userRouter = require("../routers/user");
-const voteRouter = require("../routers/vote");
-const faveRotuer = require("../routers/favorite");
+require("./models/connection");
+const idolRouter = require("./routers/idol");
+const groupRouter = require("./routers/group");
+const userRouter = require("./routers/user");
+const voteRouter = require("./routers/vote");
+const faveRotuer = require("./routers/favorite");
 
-const upload = require("../middleware/upload");
+const upload = require("./middleware/upload");
 
 const app = express();
 //middleware

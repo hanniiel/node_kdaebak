@@ -4,14 +4,14 @@
   "description": "a test to express server",
   "main": "functions/app.js",
   "scripts": {
-    "build": "netlify-lambda build express",
     "test": "nodemon local.js",
     "start": "node local.js"
   },
   "author": "haniel",
   "license": "ISC",
   "engines": {
-    "node": "^16.16.0"
+    "node": "^18.12.1",
+    "yarn": "1.22.19"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -30,7 +30,5 @@
     "serverless-http": "^3.1.1",
     "validator": "^13.7.0"
   },
-  "devDependencies": {
-    "netlify-lambda": "^2.0.15"
-  }
+  "devDependencies": {}
 }
