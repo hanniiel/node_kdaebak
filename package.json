@@ -4,7 +4,7 @@
   "description": "a test to express server",
   "main": "functions/app.js",
   "scripts": {
-    "build": "netlify-lambda build .",
+    "build": "netlify-lambda build app.js",
     "test": "nodemon local.js",
     "start": "node local.js"
   },
