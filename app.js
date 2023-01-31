@@ -58,5 +58,10 @@ app.post("/upload", upload, async function (req, res) {
   }
 });
 
-module.exports = app;
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+module.exports.app = app;
 module.exports.handler = serverless(app);
